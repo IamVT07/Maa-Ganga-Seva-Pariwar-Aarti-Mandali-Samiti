@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> माँ गंगा सेवा परिवार आरती मंडली समिति — Home</title>
+<link rel="stylesheet" href="style.css">
+<style>
+/* ═══ HERO ═══ */
+#hero{min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.hero-bg-fallback{position:absolute;inset:0;background-image:url('Aacharya.jpeg');background-size:cover;background-position:center;background-attachment:fixed;}
+.hero-bg-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(26,10,0,0.55) 0%,rgba(26,5,0,0.7) 50%,rgba(10,3,0,0.88) 100%);}
+.water-bg{position:absolute;bottom:0;left:0;width:100%;height:35%;background:linear-gradient(to top,rgba(27,79,122,0.35),transparent);overflow:hidden;}
+.wave{position:absolute;bottom:0;left:-50%;width:200%;height:55px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60'%3E%3Cpath d='M0,30 C150,55 350,5 600,30 C850,55 1050,5 1200,30 L1200,60 L0,60 Z' fill='rgba(27,79,122,0.2)'/%3E%3C/svg%3E") repeat-x;animation:waveAnim 6s linear infinite;}
+.wave:nth-child(2){bottom:8px;opacity:0.4;animation:waveAnim 9s linear infinite reverse;}
+@keyframes waveAnim{from{transform:translateX(0)}to{transform:translateX(50%)}}
+.diya-float{position:absolute;font-size:1.3rem;animation:floatDiya 12s ease-in-out infinite;opacity:0.6;}
+.diya-float:nth-child(1){bottom:12%;left:8%;animation-duration:11s;}
+.diya-float:nth-child(2){bottom:8%;left:22%;animation-delay:2s;animation-duration:14s;}
+.diya-float:nth-child(3){bottom:14%;left:40%;animation-delay:4s;}
+.diya-float:nth-child(4){bottom:9%;left:62%;animation-delay:1s;animation-duration:13s;}
+.diya-float:nth-child(5){bottom:13%;left:80%;animation-delay:3s;animation-duration:10s;}
+@keyframes floatDiya{0%,100%{transform:translateX(0) translateY(0) rotate(-5deg);}33%{transform:translateX(18px) translateY(-8px) rotate(5deg);}66%{transform:translateX(-12px) translateY(-4px) rotate(-3deg);}}
+.glow-orb{position:absolute;top:30%;left:50%;transform:translateX(-50%);width:550px;height:550px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,0,0.12) 0%,rgba(212,160,23,0.06) 40%,transparent 70%);animation:pulse 4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:translateX(-50%) scale(1);}50%{transform:translateX(-50%) scale(1.08);}}
+.hero-content{position:relative;z-index:2;text-align:center;padding:2rem;animation:fadeUp 1.2s ease forwards;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(35px);}to{opacity:1;transform:translateY(0);}}
+.hero-om{font-size:5rem;line-height:1;margin-bottom:0.4rem;background:linear-gradient(135deg,var(--saffron),var(--pale-gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 20px rgba(255,107,0,0.5));animation:glowText 3s ease-in-out infinite alternate;}
+@keyframes glowText{from{filter:drop-shadow(0 0 10px rgba(255,107,0,0.4));}to{filter:drop-shadow(0 0 30px rgba(255,107,0,0.8));}}
+.hero-title{font-family:'Cinzel Decorative',cursive;font-size:clamp(1.6rem,4.5vw,3.4rem);font-weight:900;color:var(--pale-gold);letter-spacing:3px;line-height:1.15;text-shadow:0 0 40px rgba(212,160,23,0.6);margin-bottom:0.3rem;}
+.hero-subtitle{font-family:'Cinzel',serif;font-size:clamp(0.78rem,1.8vw,1.1rem);color:rgba(242,201,76,0.7);letter-spacing:5px;text-transform:uppercase;margin-bottom:1.2rem;}
+.hero-divider{display:flex;align-items:center;justify-content:center;gap:1rem;margin:1rem 0;}
+.hero-divider span{width:70px;height:1px;background:linear-gradient(to right,transparent,var(--gold));}
+.hero-divider span:last-child{background:linear-gradient(to left,transparent,var(--gold));}
+.hero-divider .lotus{font-size:1.3rem;}
+.hero-tagline{font-style:italic;font-size:1.15rem;color:rgba(253,245,230,0.75);margin-bottom:0.4rem;}
+.hero-tagline small{font-size:0.82rem;font-style:normal;opacity:0.6;display:block;margin-top:3px;}
+.hero-cta{display:inline-flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2rem;}
+.scroll-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);text-align:center;z-index:2;}
+.scroll-hint span{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:3px;color:rgba(242,201,76,0.45);display:block;margin-bottom:6px;}
+.scroll-arrow{width:1px;height:36px;background:linear-gradient(to bottom,rgba(212,160,23,0.5),transparent);margin:0 auto;animation:scrollPulse 2s ease infinite;}
+@keyframes scrollPulse{0%,100%{opacity:0.3;transform:scaleY(0.8);}50%{opacity:1;transform:scaleY(1);}}
+.timing-card-highlight{background:linear-gradient(135deg,rgba(212,160,23,0.07),rgba(26,10,0,0.55));}
+.time-row-full{display:block;padding:0.65rem 0;border-bottom:1px solid rgba(212,160,23,0.1);}
+.time-row-full:last-of-type{border-bottom:none;}
+</style>
+</head>
+<body class="lang-hi">
+
+<!-- DONATE POPUP -->
+<div class="popup-overlay" id="donatePopup">
+  <div class="popup-box">
+    <button class="popup-close" onclick="closePopup()">✕</button>
+    <div class="popup-inner">
+      <span class="popup-icon">🪔</span>
+      <h2 class="hi">माँ गंगा को अर्पण करें</h2>
+      <h2 class="en">Offer to Maa Ganga</h2>
+      <p class="hi">आपका एक छोटा-सा दान माँ गंगा की आरती और सेवा को अनवरत जारी रखने में सहयोग करता है। हर दान पुण्य का कार्य है।</p>
+      <p class="en">Your generous contribution keeps the sacred Ganga Aarti burning — an act of merit for you and your family.</p>
+      <div class="popup-btns">
+        <a href="donate.html" class="popup-btn-donate">
+          <span class="hi">दान करें 🙏</span><span class="en">Donate Now 🙏</span>
+        </a>
+        <button class="popup-btn-skip" onclick="closePopup()">
+          <span class="hi">बाद में</span><span class="en">Maybe Later</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="Logo.png" alt="Logo" class="nav-logo-img" onerror="this.style.display='none'">
+    <div class="nav-logo-text">
+      <span class="hi">माँ गंगा सेवा परिवार आरती मंडली समिति</span>
+      <span class="en">Maa Ganga Seva Pariwar Aarti Mandali Samiti</span>
+      <small><span class="hi">हर हर गंगे · सरसैया घाट, कानपुर</span><span class="en">Har Har Gange · Sarsaiya Ghat, Kanpur</span></small>
+    </div>
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="index.html#history"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
+      <li><a href="timings.html"><span class="hi">समय</span><span class="en">Timings</span></a></li>
+      <li><a href="calendar.html"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
+      <li><a href="booking.html"><span class="hi">आरती बुक करें</span><span class="en">Book Aarti</span></a></li>
+      <li><a href="gallery.html"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
+      <li><a href="visit.html"><span class="hi">मार्गदर्शिका</span><span class="en">Guide</span></a></li>
+      <li><a href="donate.html"><span class="hi">दान</span><span class="en">Donate</span></a></li>
+      <li><a href="contact.html"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
+    </ul>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('hi')">हिंदी</button>
+      <button class="lang-btn" onclick="setLang('en')">ENG</button>
+    </div>
+  </div>
+  <!-- HAMBURGER -->
+  <input type="checkbox" id="hamburger" class="hamburger-checkbox">
+  <label for="hamburger" class="hamburger-btn" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </label>
+  <!-- MOBILE NAV MENU -->
+  <ul class="mobile-nav">
+    <li><a href="index.html#history" onclick="closeMenu()"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
+    <li><a href="timings.html" onclick="closeMenu()"><span class="hi">समय</span><span class="en">Timings</span></a></li>
+    <li><a href="calendar.html" onclick="closeMenu()"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
+    <li><a href="booking.html" onclick="closeMenu()"><span class="hi">आरती बुक करें</span><span class="en">Book Aarti</span></a></li>
+    <li><a href="gallery.html" onclick="closeMenu()"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
+    <li><a href="visit.html" onclick="closeMenu()"><span class="hi">मार्गदर्शिका</span><span class="en">Guide</span></a></li>
+    <li><a href="donate.html" onclick="closeMenu()"><span class="hi">दान</span><span class="en">Donate</span></a></li>
+    <li><a href="contact.html" onclick="closeMenu()"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════ HERO SECTION ═══════════════ -->
+<section id="hero" style="background-image:url('Aacharya.jpeg');background-size:cover;background-position:center;background-attachment:fixed;">
+  <div class="hero-bg-fallback"></div>
+  <div class="hero-bg-overlay"></div>
+  <div class="water-bg">
+    <div class="wave"></div><div class="wave"></div>
+    <div class="diya-float">🪔</div><div class="diya-float">🪔</div>
+    <div class="diya-float">🪔</div><div class="diya-float">🪔</div><div class="diya-float">🪔</div>
+  </div>
+  <div class="glow-orb"></div>
+  <div class="hero-content">
+    <div class="hero-om">ॐ</div>
+    <h1 class="hero-title">
+      <span class="hi">माँ गंगा सेवा परिवार आरती मंडली समिति</span>
+      <span class="en">Maa Ganga Seva Pariwar Aarti Mandali Samiti</span>
+    </h1>
+    <p class="hero-subtitle">
+      <span class="hi">सरसैया घाट, कानपुर · २०१० से</span>
+      <span class="en">Sarsaiya Ghat, Kanpur · Since 2010</span>
+    </p>
+    <div class="hero-divider"><span></span><span class="lotus">🌸</span><span></span></div>
+    <p class="hero-tagline">
+      <span class="hi">"जहाँ गंगा बहती है, वहाँ देव बसते हैं"</span>
+      <span class="en">"Where the Ganga flows, the divine dwells"</span>
+      <small class="hi">माँ गंगा की पवित्र आरती में आपका स्वागत है</small>
+      <small class="en">You are welcome to the sacred Aarti of Maa Ganga</small>
+    </p>
+    <div class="hero-cta">
+      <a href="booking.html" class="btn-primary">
+        <span class="hi">आरती बुक करें</span><span class="en">Book an Aarti</span>
+      </a>
+      <a href="timings.html" class="btn-outline">
+        <span class="hi">आरती का समय</span><span class="en">View Timings</span>
+      </a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span class="hi">अन्वेषण करें</span><span class="en">Explore</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ═══════════════ HISTORY SECTION ═══════════════ -->
+<div class="announcement" id="history-announcement">
+  <span class="hi">हर हर गंगे — सरसैया घाट, कानपुर पर प्रत्येक रविवार भव्य आरती</span>
+  <span class="en">Har Har Gange — Grand Aarti every Sunday at Sarsaiya Ghat, Kanpur</span>
+</div>
+
+<section id="history" style="background:linear-gradient(to bottom,var(--dark),#200E00);">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-eyebrow hi">उत्पत्ति और विरासत</span><span class="section-eyebrow en">Origins &amp; Legacy</span>
+      <h2 class="section-title hi">गंगा आरती का इतिहास</h2><h2 class="section-title en">History of Ganga Aarti</h2>
+      <div class="section-line"></div>
+      <p class="section-desc hi">पीढ़ियों से चली आ रही एक जीवंत परंपरा — भक्ति की पवित्र लौ कभी नहीं बुझती।</p>
+      <p class="section-desc en">A living tradition passed through generations — the sacred flame of devotion never extinguishes.</p>
+    </div>
+    <div class="history-grid">
+      <div class="history-text">
+        <h3 class="hi">पवित्र नदी और उसकी पूजा</h3><h3 class="en">The Sacred River &amp; Her Worship</h3>
+        <p class="hi">माँ गंगा की पूजा उतनी ही प्राचीन है जितने स्वयं वेद। आरती — एक अनुष्ठान जिसमें दिव्यता को प्रकाश अर्पित किया जाता है — हजारों वर्षों से गंगा के तट पर की जाती रही है।</p>
+        <p class="en">The worship of Maa Ganga is as ancient as the Vedas themselves. The Aarti — a ritual of offering light to the divine — has been performed along the banks of the Ganges for thousands of years.</p>
+        <p class="hi">कानपुर में सरसैया घाट गंगा के तट पर स्थित सबसे पवित्र घाटों में से एक है। समुदाय ने पीढ़ियों से आरती की निरंतर परंपरा को बनाए रखा है।</p>
+        <p class="en">Sarsaiya Ghat in Kanpur holds special significance as one of the holiest ghats along the Ganga. The community has maintained a continuous tradition of Aarti for generations.</p>
+        <h3 class="hi section-spacing">माँ गंगा सेवा परिवार</h3><h3 class="en section-spacing">Maa Ganga Seva Pariwar</h3>
+        <p class="hi">2010 में स्थापित, हमारा परिवार सरसैया घाट, कानपुर पर गंगा आरती की पवित्रता, निरंतरता और भव्यता को संरक्षित करने के लिए समर्पित है।</p>
+        <p class="en">Founded in 2010, our Pariwar is dedicated to preserving the sanctity, continuity, and grandeur of the Ganga Aarti at Sarsaiya Ghat, Kanpur.</p>
+      </div>
+      <div class="history-card">
+        <ul class="timeline">
+          <li><strong class="hi">प्राचीन वैदिक काल</strong><strong class="en">Ancient Vedic Era</strong><span class="hi">ऋग्वेद में गंगा पूजन का वर्णन; नदी को देवी गंगा माता के रूप में व्यक्त किया गया।</span><span class="en">Ganga worship described in the Rigveda; river personified as Goddess Ganga Mata.</span></li>
+          <li><strong class="hi">राजा भागीरथ की तपस्या</strong><strong class="en">King Bhagirath's Penance</strong><span class="hi">ऋषि भागीरथ ने अपने पूर्वजों को मुक्ति दिलाने के लिए तपस्या की — "भागीरथ प्रयास" का उद्गम।</span><span class="en">Sage Bhagirath meditated to bring Ganga to Earth — origin of "Bhagirath Prayaas."</span></li>
+          <li><strong class="hi">मध्यकाल</strong><strong class="en">Medieval Period</strong><span class="hi">सरसैया घाट कानपुर में गंगा के तट पर एक प्रमुख तीर्थ केंद्र बन जाता है।</span><span class="en">Sarsaiya Ghat becomes a major pilgrimage center along the Ganga in Kanpur.</span></li>
+          <li><strong class="hi">२०वीं सदी</strong><strong class="en">20th Century</strong><span class="hi">नियमित पुजारी रविवार और त्योहारों पर आरती आयोजित करने लगते हैं।</span><span class="en">Regular priests begin conducting Aarti on Sundays and festivals.</span></li>
+          <li><strong class="hi">2010 — परिवार की स्थापना</strong><strong class="en">2010 — Pariwar Founded</strong><span class="hi">माँ गंगा सेवा परिवार की स्थापना सरसैया घाट की आरती परंपरा को औपचारिक रूप देने के लिए।</span><span class="en">Maa Ganga Seva Pariwar established to formalise the Aarti tradition at Sarsaiya Ghat.</span></li>
+          <li><strong class="hi">वर्तमान दिन</strong><strong class="en">Present Day</strong><span class="hi">प्रत्येक रविवार और सभी प्रमुख त्योहारों पर पवित्र आरती।</span><span class="en">Sacred Aarti performed every Sunday and all major festivals.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <span class="footer-om">ॐ</span>
+  <div class="footer-social">
+    <a href="http://www.youtube.com/@MaGangaSewaPariwar" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.8 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>YouTube</a>
+    <a href="https://www.instagram.com/ma_ganga_sewa_pariwar_" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.2 4.9 1.7 5.1 5.1.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.2 3.3-1.7 4.9-5.1 5.1-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.2-4.9-1.7-5.1-5.1-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c.2-3.3 1.7-4.9 5.1-5.1 1.2-.1 1.6-.1 4.8-.1zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12c0 3.3 0 3.7.1 4.9.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c-.2-4.4-2.6-6.8-7-7C15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4A6.2 6.2 0 0 0 12 5.8zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8z"/></svg>Instagram</a>
+    <a href="https://www.facebook.com/share/1B33ss18G9/r" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Facebook</a>
+    <a href="https://wa.me/918799355830" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5 0-.2 0-.4-.1-.5-.1-.2-.7-1.6-1-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.1.2 2.1 3.2 5 4.4.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.3.2-.6.2-1.2.1-1.3-.1-.1-.3-.2-.6-.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.3C8.5 21.5 10.2 22 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.2c-1.6 0-3.2-.4-4.5-1.2l-.3-.2-3.1.8.8-3-.2-.3C3.9 15.1 3.5 13.6 3.5 12 3.5 7.3 7.3 3.5 12 3.5s8.5 3.8 8.5 8.5-3.8 8.2-8.5 8.2z"/></svg>WhatsApp</a>
+  </div>
+  <ul class="footer-links">
+    <li><a href="index.html#history"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
+    <li><a href="timings.html"><span class="hi">समय</span><span class="en">Timings</span></a></li>
+    <li><a href="calendar.html"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
+    <li><a href="booking.html"><span class="hi">बुकिंग</span><span class="en">Booking</span></a></li>
+    <li><a href="gallery.html"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
+    <li><a href="donate.html"><span class="hi">दान</span><span class="en">Donate</span></a></li>
+    <li><a href="contact.html"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
+  </ul>
+  <p>© 2025 माँ गंगा सेवा परिवार आरती मंडली समिति · Sarsaiya Ghat, Kanpur, UP</p>
+  <p class="footer-note">हर हर गंगे &nbsp;·&nbsp; Har Har Gange &nbsp;·&nbsp; जय माँ गंगा</p>
+  <a href="admin.html" class="admin-footer-btn" title="Admin Panel">ॐ</a>
+</footer>
+
+<script>
+/* ════ LANGUAGE ════ */
+function setLang(lang){
+  document.body.className='lang-'+lang;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector('.lang-btn[onclick="setLang(\''+lang+'\')"]').classList.add('active');
+  localStorage.setItem('siteLang',lang);
+}
+(function(){
+  const saved=localStorage.getItem('siteLang')||'hi';
+  document.body.className='lang-'+saved;
+  const btn=document.querySelector('.lang-btn[onclick="setLang(\''+saved+'\')"]');
+  if(btn){document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+})();
+
+/* ════ MOBILE MENU ════ */
+function closeMenu(){
+  const cb=document.getElementById('hamburger');
+  if(cb) cb.checked=false;
+}
+// Close menu when clicking outside
+document.addEventListener('click',function(e){
+  const nav=document.querySelector('nav');
+  const hamburger=document.getElementById('hamburger');
+  if(hamburger && hamburger.checked && !nav.contains(e.target)){
+    hamburger.checked=false;
+  }
+});
+
+/* ════ POPUP ════ */
+function closePopup(){document.getElementById('donatePopup').classList.remove('open');}
+document.getElementById('donatePopup').addEventListener('click',function(e){if(e.target===this)closePopup();});
+setTimeout(()=>{document.getElementById('donatePopup').classList.add('open');},3000);
+
+/* ════ SMOOTH SCROLL TO HISTORY IF HASH ════ */
+(function(){
+  if(location.hash==='#history'){
+    setTimeout(()=>{
+      const el=document.getElementById('history');
+      if(el) el.scrollIntoView({behavior:'smooth'});
+    },300);
+  }
+})();
+</script>
+</body>
+</html>

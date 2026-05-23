@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>संपर्क — माँ गंगा सेवा परिवार</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="lang-hi">
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="Logo.png" alt="Logo" class="nav-logo-img" onerror="this.style.display='none'">
+    <div class="nav-logo-text">
+      <span class="hi">माँ गंगा सेवा परिवार आरती मंडली समिति</span>
+      <span class="en">Maa Ganga Seva Pariwar Aarti Mandali Samiti</span>
+      <small><span class="hi">हर हर गंगे · सरसैया घाट, कानपुर</span><span class="en">Har Har Gange · Sarsaiya Ghat, Kanpur</span></small>
+    </div>
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="index.html#history"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
+      <li><a href="timings.html"><span class="hi">समय</span><span class="en">Timings</span></a></li>
+      <li><a href="calendar.html"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
+      <li><a href="booking.html"><span class="hi">आरती बुक करें</span><span class="en">Book Aarti</span></a></li>
+      <li><a href="gallery.html"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
+      <li><a href="visit.html"><span class="hi">मार्गदर्शिका</span><span class="en">Guide</span></a></li>
+      <li><a href="donate.html"><span class="hi">दान</span><span class="en">Donate</span></a></li>
+      <li><a href="contact.html" class="active"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
+    </ul>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('hi')">हिंदी</button>
+      <button class="lang-btn" onclick="setLang('en')">ENG</button>
+    </div>
+  </div>
+  <input type="checkbox" id="hamburger" class="hamburger-checkbox">
+  <label for="hamburger" class="hamburger-btn" aria-label="Menu"><span></span><span></span><span></span></label>
+  <ul class="mobile-nav">
+    <li><a href="index.html#history" onclick="closeMenu()"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
+    <li><a href="timings.html" onclick="closeMenu()"><span class="hi">समय</span><span class="en">Timings</span></a></li>
+    <li><a href="calendar.html" onclick="closeMenu()"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
+    <li><a href="booking.html" onclick="closeMenu()"><span class="hi">आरती बुक करें</span><span class="en">Book Aarti</span></a></li>
+    <li><a href="gallery.html" onclick="closeMenu()"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
+    <li><a href="visit.html" onclick="closeMenu()"><span class="hi">मार्गदर्शिका</span><span class="en">Guide</span></a></li>
+    <li><a href="donate.html" onclick="closeMenu()"><span class="hi">दान</span><span class="en">Donate</span></a></li>
+    <li><a href="contact.html" onclick="closeMenu()"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
+  </ul>
+</nav>
+
+<section id="contact" style="background:linear-gradient(135deg,#200E00,#0D0A1A);padding-top:90px;">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-eyebrow hi">संपर्क करें</span><span class="section-eyebrow en">Reach Out</span>
+      <h2 class="section-title hi">संपर्क</h2><h2 class="section-title en">Contact Us</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-card">
+        <span class="cc-icon">📍</span>
+        <h4 class="hi">मुख्य कार्यालय</h4><h4 class="en">Main Office</h4>
+        <p>माँ गंगा सेवा परिवार<br>Sarsaiya Ghat, Kanpur<br>208001, Uttar Pradesh</p>
+      </div>
+      <div class="contact-card">
+        <span class="cc-icon">📞</span>
+        <h4 class="hi">फोन एवं WhatsApp</h4><h4 class="en">Phone &amp; WhatsApp</h4>
+        <p>
+          <a href="tel:+918799355830">+91 87993 55830</a><br>
+          <a href="https://wa.me/918799355830">WhatsApp</a><br><br>
+          <em style="font-size:0.85rem;opacity:0.6;"><span class="hi">सुबह 6 बजे – रात 9 बजे</span><span class="en">6 AM – 9 PM daily</span></em>
+        </p>
+      </div>
+      <div class="contact-card">
+        <span class="cc-icon">✉️</span>
+        <h4 class="hi">ईमेल एवं सोशल</h4><h4 class="en">Email &amp; Social</h4>
+        <p>
+          <a href="mailto:magangasewap@gmail.com">magangasewap@gmail.com</a><br><br>
+          <a href="http://www.youtube.com/@MaGangaSewaPariwar" target="_blank" class="contact-social-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.8 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+            YouTube
+          </a>
+          <a href="https://www.instagram.com/ma_ganga_sewa_pariwar_" target="_blank" class="contact-social-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.2 4.9 1.7 5.1 5.1.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.2 3.3-1.7 4.9-5.1 5.1-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.2-4.9-1.7-5.1-5.1-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c.2-3.3 1.7-4.9 5.1-5.1 1.2-.1 1.6-.1 4.8-.1zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12c0 3.3 0 3.7.1 4.9.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c-.2-4.4-2.6-6.8-7-7C15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4A6.2 6.2 0 0 0 12 5.8zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8z"/></svg>
+            Instagram
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-om">ॐ</span>
+  <div class="footer-social">
+    <a href="http://www.youtube.com/@MaGangaSewaPariwar" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.8 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>YouTube</a>
+    <a href="https://www.instagram.com/ma_ganga_sewa_pariwar_" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 3.3.2 4.9 1.7 5.1 5.1.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.2 3.3-1.7 4.9-5.1 5.1-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.2-4.9-1.7-5.1-5.1-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c.2-3.3 1.7-4.9 5.1-5.1 1.2-.1 1.6-.1 4.8-.1zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12c0 3.3 0 3.7.1 4.9.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c-.2-4.4-2.6-6.8-7-7C15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4A6.2 6.2 0 0 0 12 5.8zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8z"/></svg>Instagram</a>
+    <a href="https://www.facebook.com/MaaGangaSevaPariwaar" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>Facebook</a>
+    <a href="https://wa.me/918799355830" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5 0-.2 0-.4-.1-.5-.1-.2-.7-1.6-1-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.1.2 2.1 3.2 5 4.4.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.3.2-.6.2-1.2.1-1.3-.1-.1-.3-.2-.6-.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 5L2 22l5.2-1.3C8.5 21.5 10.2 22 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.2c-1.6 0-3.2-.4-4.5-1.2l-.3-.2-3.1.8.8-3-.2-.3C3.9 15.1 3.5 13.6 3.5 12 3.5 7.3 7.3 3.5 12 3.5s8.5 3.8 8.5 8.5-3.8 8.2-8.5 8.2z"/></svg>WhatsApp</a>
+  </div>
+  <ul class="footer-links">
+    <li><a href="index.html#history"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
+    <li><a href="timings.html"><span class="hi">समय</span><span class="en">Timings</span></a></li>
+    <li><a href="calendar.html"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
+    <li><a href="booking.html"><span class="hi">बुकिंग</span><span class="en">Booking</span></a></li>
+    <li><a href="gallery.html"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
+    <li><a href="donate.html"><span class="hi">दान</span><span class="en">Donate</span></a></li>
+    <li><a href="contact.html"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
+  </ul>
+  <p>© 2025 माँ गंगा सेवा परिवार आरती मंडली समिति · Sarsaiya Ghat, Kanpur, UP</p>
+  <p class="footer-note">हर हर गंगे &nbsp;·&nbsp; Har Har Gange &nbsp;·&nbsp; जय माँ गंगा</p>
+  <a href="admin.html" class="admin-footer-btn" title="Admin Panel">ॐ</a>
+</footer>
+
+<script>
+function setLang(lang){document.body.className='lang-'+lang;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));document.querySelector('.lang-btn[onclick="setLang(\''+lang+'\')"]').classList.add('active');localStorage.setItem('siteLang',lang);}
+(function(){const saved=localStorage.getItem('siteLang')||'hi';document.body.className='lang-'+saved;const btn=document.querySelector('.lang-btn[onclick="setLang(\''+saved+'\')"]');if(btn){document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}})();
+function closeMenu(){const cb=document.getElementById('hamburger');if(cb)cb.checked=false;}
+document.addEventListener('click',function(e){const nav=document.querySelector('nav');const hamburger=document.getElementById('hamburger');if(hamburger&&hamburger.checked&&!nav.contains(e.target))hamburger.checked=false;});
+</script>
+</body>
+</html>

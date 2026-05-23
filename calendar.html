@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>लाइव आरती कैलेंडर — माँ गंगा सेवा परिवार</title>
+<link rel="stylesheet" href="style.css">
+<!-- Load config + Firebase Firestore to sync admin-added events -->
+<script src="config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+</head>
+<body class="lang-hi">
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="Logo.png" alt="Logo" class="nav-logo-img" onerror="this.style.display='none'">
+    <div class="nav-logo-text">
+      <span class="hi">माँ गंगा सेवा परिवार आरती मंडली समिति</span>
+      <span class="en">Maa Ganga Seva Pariwar Aarti Mandali Samiti</span>
+      <small><span class="hi">हर हर गंगे · सरसैया घाट, कानपुर</span><span class="en">Har Har Gange · Sarsaiya Ghat, Kanpur</span></small>
+    </div>
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="index.html#history"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
+      <li><a href="timings.html"><span class="hi">समय</span><span class="en">Timings</span></a></li>
+      <li><a href="calendar.html" class="active"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
+      <li><a href="booking.html"><span class="hi">आरती बुक करें</span><span class="en">Book Aarti</span></a></li>
+      <li><a href="gallery.html"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
+      <li><a href="visit.html"><span class="hi">मार्गदर्शिका</span><span class="en">Guide</span></a></li>
+      <li><a href="donate.html"><span class="hi">दान</span><span class="en">Donate</span></a></li>
+      <li><a href="contact.html"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
+    </ul>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('hi')">हिंदी</button>
+      <button class="lang-btn" onclick="setLang('en')">ENG</button>
+    </div>
+  </div>
+  <input type="checkbox" id="hamburger" class="hamburger-checkbox">
+  <label for="hamburger" class="hamburger-btn" aria-label="Menu"><span></span><span></span><span></span></label>
+  <ul class="mobile-nav">
+    <li><a href="index.html#history" onclick="closeMenu()"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
+    <li><a href="timings.html" onclick="closeMenu()"><span class="hi">समय</span><span class="en">Timings</span></a></li>
+    <li><a href="calendar.html" onclick="closeMenu()"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
+    <li><a href="booking.html" onclick="closeMenu()"><span class="hi">आरती बुक करें</span><span class="en">Book Aarti</span></a></li>
+    <li><a href="gallery.html" onclick="closeMenu()"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
+    <li><a href="visit.html" onclick="closeMenu()"><span class="hi">मार्गदर्शिका</span><span class="en">Guide</span></a></li>
+    <li><a href="donate.html" onclick="closeMenu()"><span class="hi">दान</span><span class="en">Donate</span></a></li>
+    <li><a href="contact.html" onclick="closeMenu()"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
+  </ul>
+</nav>
+
+<section id="calendar" style="background:linear-gradient(to bottom,#0D0A1A,#1A0500);padding-top:90px;">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-eyebrow hi">आरती कार्यक्रम</span><span class="section-eyebrow en">Aarti Schedule</span>
+      <h2 class="section-title hi">लाइव आरती कैलेंडर</h2><h2 class="section-title en">Live Aarti Calendar</h2>
+      <div class="section-line"></div>
+      <p class="section-desc hi">जानें कब और कहाँ आरती होगी — त्योहार, विशेष दिन और साप्ताहिक कार्यक्रम।</p>
+      <p class="section-desc en">See when and where the Aarti takes place — festivals, special days, and weekly schedule.</p>
+    </div>
+    <div class="calendar-container">
+      <div class="cal-header">
+        <button class="cal-nav" onclick="calPrev()">‹</button>
+        <span class="cal-month-year" id="calTitle"></span>
+        <button class="cal-nav" onclick="calNext()">›</button>
+      </div>
+      <div class="cal-grid">
+        <div class="cal-day-header"><span class="hi">रवि</span><span class="en">Sun</span></div>
+        <div class="cal-day-header"><span class="hi">सोम</span><span class="en">Mon</span></div>
+        <div class="cal-day-header"><span class="hi">मंगल</span><span class="en">Tue</span></div>
+        <div class="cal-day-header"><span class="hi">बुध</span><span class="en">Wed</span></div>
+        <div class="cal-day-header"><span class="hi">गुरु</span><span class="en">Thu</span></div>
+        <div class="cal-day-header"><span class="hi">शुक्र</span><span class="en">Fri</span></div>
+        <div class="cal-day-header"><span class="hi">शनि</span><span class="en">Sat</span></div>
+        <div id="calDays" style="display:contents;"></div>
+      </div>
+      <div class="events-panel" id="eventsPanel">
+        <h3 id="eventsPanelTitle"><span class="hi">आज के कार्यक्रम</span><span class="en">Today's Events</span></h3>
+        <div id="eventsList"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-om">ॐ</span>
+  <ul class="footer-links">
+    <li><a href="index.html#history"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
+    <li><a href="timings.html"><span class="hi">समय</span><span class="en">Timings</span></a></li>
+    <li><a href="calendar.html"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
+    <li><a href="booking.html"><span class="hi">बुकिंग</span><span class="en">Booking</span></a></li>
+    <li><a href="gallery.html"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
+    <li><a href="donate.html"><span class="hi">दान</span><span class="en">Donate</span></a></li>
+    <li><a href="contact.html"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
+  </ul>
+  <p>© 2025 माँ गंगा सेवा परिवार आरती मंडली समिति · Sarsaiya Ghat, Kanpur, UP</p>
+  <p class="footer-note">हर हर गंगे &nbsp;·&nbsp; Har Har Gange &nbsp;·&nbsp; जय माँ गंगा</p>
+  <a href="admin.html" class="admin-footer-btn" title="Admin Panel">ॐ</a>
+</footer>
+
+<script>
+function setLang(lang){document.body.className='lang-'+lang;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));document.querySelector('.lang-btn[onclick="setLang(\''+lang+'\')"]').classList.add('active');localStorage.setItem('siteLang',lang);renderCalendar();}
+(function(){const saved=localStorage.getItem('siteLang')||'hi';document.body.className='lang-'+saved;const btn=document.querySelector('.lang-btn[onclick="setLang(\''+saved+'\')"]');if(btn){document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}})();
+function closeMenu(){const cb=document.getElementById('hamburger');if(cb)cb.checked=false;}
+document.addEventListener('click',function(e){const nav=document.querySelector('nav');const hamburger=document.getElementById('hamburger');if(hamburger&&hamburger.checked&&!nav.contains(e.target))hamburger.checked=false;});
+
+/* ════ CALENDAR ════ */
+let specialEvents={
+  '2025-11-05':[{title:'Kartik Purnima',en:'Grand Maha Aarti — Sarsaiya Ghat',hi:'महाआरती — सरसैया घाट, कानपुर'}],
+  '2026-02-26':[{title:'Maha Shivratri',en:'Night-long Aarti',hi:'रात्रिकालीन महाआरती'}],
+  '2026-06-05':[{title:'Ganga Dussehra',en:'10-Day Special Aarti Begins',hi:'10-दिवसीय विशेष आरती'}],
+  '2026-01-14':[{title:'Makar Sankranti',en:'Dawn Special Aarti',hi:'विशेष प्रातः आरती'}],
+  '2026-03-19':[{title:'Navratri',en:'Chaitra Navratri Aarti Begins',hi:'चैत्र नवरात्रि आरती'}],
+};
+function loadLocalEvents(){
+  const stored=localStorage.getItem('calendarEvents');
+  if(stored){try{Object.assign(specialEvents,JSON.parse(stored));}catch(e){}}
+}
+loadLocalEvents();
+
+// Listen for cross-tab updates (when admin adds an event)
+window.addEventListener('storage',e=>{
+  if(e.key==='calendarEvents'){loadLocalEvents();renderCalendar();}
+});
+
+// ── Firestore sync — admin se add kiye events calendar pe dikhao ──────────
+(function initCalendarFirestore(){
+  function tryInit(retries){
+    if(typeof firebase==='undefined'||!firebase.apps){
+      if(retries>0){setTimeout(()=>tryInit(retries-1),150);}
+      return;
+    }
+    try{
+      const cfg=window.FIREBASE_CONFIG||window.firebaseConfig;
+      if(!cfg){return;}
+      if(!firebase.apps.length){firebase.initializeApp(cfg);}
+      const fsDb=firebase.firestore();
+
+      // Real-time listener — admin event add/delete kare to calendar turant update ho
+      fsDb.collection('events').onSnapshot((snapshot)=>{
+        const fetched={};
+        snapshot.forEach((doc)=>{
+          const ev=doc.data();
+          const date=ev.date;
+          if(!date)return;
+          if(!fetched[date])fetched[date]=[];
+          fetched[date].push({title:ev.title,en:ev.en,hi:ev.hi});
+        });
+        // Hard-coded events + Firebase events dono merge karo
+        Object.assign(specialEvents,fetched);
+        // localStorage mein save karo taaki next visit fast ho
+        localStorage.setItem('calendarEvents',JSON.stringify(fetched));
+        renderCalendar();
+      },(err)=>{
+        console.warn('Firestore calendar listener error:',err.message);
+        // Fallback: localStorage se load karo
+        loadLocalEvents();
+        renderCalendar();
+      });
+    }catch(e){
+      console.warn('Calendar Firestore init skipped:',e.message);
+    }
+  }
+  tryInit(30);
+})();
+
+let calDate=new Date();
+const hiMonths=['जनवरी','फरवरी','मार्च','अप्रैल','मई','जून','जुलाई','अगस्त','सितंबर','अक्टूबर','नवंबर','दिसंबर'];
+const enMonths=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function isLangHi(){return document.body.classList.contains('lang-hi');}
+function renderCalendar(){
+  const titleEl=document.getElementById('calTitle');if(!titleEl)return;
+  const y=calDate.getFullYear(),m=calDate.getMonth();
+  const lang=isLangHi();
+  titleEl.textContent=(lang?hiMonths[m]:enMonths[m])+' '+y;
+  const firstDay=new Date(y,m,1).getDay();
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const today=new Date();
+  let html='';
+  for(let i=0;i<firstDay;i++){const prev=new Date(y,m,0).getDate()-firstDay+i+1;html+='<div class="cal-day other-month">'+prev+'</div>';}
+  for(let d=1;d<=daysInMonth;d++){
+    const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const isSunday=new Date(y,m,d).getDay()===0;
+    const isToday=y===today.getFullYear()&&m===today.getMonth()&&d===today.getDate();
+    const hasEvent=!!specialEvents[ds]||isSunday;
+    let cls='cal-day';
+    if(isToday)cls+=' today';
+    if(hasEvent)cls+=' has-event';
+    html+='<div class="'+cls+'" onclick="showDateEvents(\''+ds+'\','+isSunday+')">'+d+'</div>';
+  }
+  document.getElementById('calDays').innerHTML=html;
+  const todayStr=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+  showDateEvents(todayStr,today.getDay()===0);
+}
+function showDateEvents(dateStr,isSunday){
+  document.querySelectorAll('.cal-day').forEach(d=>d.classList.remove('selected'));
+  const lang=isLangHi();
+  const events=specialEvents[dateStr]||[];
+  let html='';
+  if(isSunday){html+='<div class="event-item"><div class="event-dot"></div><div class="event-info"><h4>'+(lang?'साप्ताहिक सायंकालीन आरती (रविवार)':'Weekly Evening Aarti (Sunday)')+'</h4><p>'+(lang?'सायं 6:00 बजे — सरसैया घाट, कानपुर':'Evening 6:00 PM — Sarsaiya Ghat, Kanpur')+'</p></div></div>';}
+  events.forEach(ev=>{html+='<div class="event-item"><div class="event-dot" style="background:#FFD700;"></div><div class="event-info"><h4>'+ev.title+'</h4><p>'+(lang?ev.hi:ev.en)+'</p></div></div>';});
+  if(!html)html='<p class="no-events">'+(lang?'इस दिन कोई विशेष कार्यक्रम नहीं':'No special events on this day')+'</p>';
+  document.getElementById('eventsList').innerHTML=html;
+  document.getElementById('eventsPanelTitle').innerHTML='<span>Events on '+dateStr+'</span>';
+}
+function calPrev(){calDate.setMonth(calDate.getMonth()-1);renderCalendar();}
+function calNext(){calDate.setMonth(calDate.getMonth()+1);renderCalendar();}
+renderCalendar();
+</script>
+</body>
+</html>

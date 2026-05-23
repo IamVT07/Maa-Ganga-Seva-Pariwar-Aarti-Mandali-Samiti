@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>आगंतुक मार्गदर्शिका — माँ गंगा सेवा परिवार</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="lang-hi">
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="Logo.png" alt="Logo" class="nav-logo-img" onerror="this.style.display='none'">
+    <div class="nav-logo-text">
+      <span class="hi">माँ गंगा सेवा परिवार आरती मंडली समिति</span>
+      <span class="en">Maa Ganga Seva Pariwar Aarti Mandali Samiti</span>
+      <small><span class="hi">हर हर गंगे · सरसैया घाट, कानपुर</span><span class="en">Har Har Gange · Sarsaiya Ghat, Kanpur</span></small>
+    </div>
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="index.html#history"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
+      <li><a href="timings.html"><span class="hi">समय</span><span class="en">Timings</span></a></li>
+      <li><a href="calendar.html"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
+      <li><a href="booking.html"><span class="hi">आरती बुक करें</span><span class="en">Book Aarti</span></a></li>
+      <li><a href="gallery.html"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
+      <li><a href="visit.html" class="active"><span class="hi">मार्गदर्शिका</span><span class="en">Guide</span></a></li>
+      <li><a href="donate.html"><span class="hi">दान</span><span class="en">Donate</span></a></li>
+      <li><a href="contact.html"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
+    </ul>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('hi')">हिंदी</button>
+      <button class="lang-btn" onclick="setLang('en')">ENG</button>
+    </div>
+  </div>
+  <input type="checkbox" id="hamburger" class="hamburger-checkbox">
+  <label for="hamburger" class="hamburger-btn" aria-label="Menu"><span></span><span></span><span></span></label>
+  <ul class="mobile-nav">
+    <li><a href="index.html#history" onclick="closeMenu()"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
+    <li><a href="timings.html" onclick="closeMenu()"><span class="hi">समय</span><span class="en">Timings</span></a></li>
+    <li><a href="calendar.html" onclick="closeMenu()"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
+    <li><a href="booking.html" onclick="closeMenu()"><span class="hi">आरती बुक करें</span><span class="en">Book Aarti</span></a></li>
+    <li><a href="gallery.html" onclick="closeMenu()"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
+    <li><a href="visit.html" onclick="closeMenu()"><span class="hi">मार्गदर्शिका</span><span class="en">Guide</span></a></li>
+    <li><a href="donate.html" onclick="closeMenu()"><span class="hi">दान</span><span class="en">Donate</span></a></li>
+    <li><a href="contact.html" onclick="closeMenu()"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
+  </ul>
+</nav>
+
+<section id="visit" style="background:linear-gradient(to bottom,var(--dark),#1A0800);">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-eyebrow hi">तीर्थयात्री जानकारी</span><span class="section-eyebrow en">Pilgrim Information</span>
+      <h2 class="section-title hi">आगंतुक मार्गदर्शिका</h2><h2 class="section-title en">Visitor's Guide</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="guide-grid">
+      <div class="guide-block"><h3>🙏 <span class="hi">शिष्टाचार</span><span class="en">Etiquette</span></h3><ul>
+        <li><span class="hi">विनम्र पारंपरिक पोशाक पहनें।</span><span class="en">Wear modest, traditional attire.</span></li>
+        <li><span class="hi">घाट पर जाने से पहले जूते उतारें।</span><span class="en">Remove footwear before the ghat.</span></li>
+        <li><span class="hi">समारोह के दौरान मौन रखें।</span><span class="en">Maintain silence during the ceremony.</span></li>
+        <li><span class="hi">फ्लैश फोटोग्राफी न करें।</span><span class="en">No flash photography.</span></li>
+      </ul></div>
+      <div class="guide-block"><h3>🚌 <span class="hi">कैसे पहुँचें</span><span class="en">How to Reach</span></h3><ul>
+        <li><span class="hi">सरसैया घाट — कानपुर मुख्य शहर।</span><span class="en">Sarsaiya Ghat — Kanpur city.</span></li>
+        <li><span class="hi">कानपुर सेंट्रल से ~4-5 किमी।</span><span class="en">~4–5 km from Kanpur Central station.</span></li>
+        <li><span class="hi">ऑटो-रिक्शा और टैक्सी उपलब्ध।</span><span class="en">Auto-rickshaws and taxis available.</span></li>
+        <li><span class="hi">घाट के पास पर्याप्त पार्किंग।</span><span class="en">Ample parking near the ghat.</span></li>
+      </ul></div>
+      <div class="guide-block"><h3>⏰ <span class="hi">समय सुझाव</span><span class="en">Timing Tips</span></h3><ul>
+        <li><span class="hi">आरती से 45-60 मिनट पहले पहुँचें।</span><span class="en">Arrive 45–60 min before Aarti.</span></li>
+        <li><span class="hi">त्योहारों पर 1-2 घंटे पहले पहुँचें।</span><span class="en">On festivals arrive 1–2 hours early.</span></li>
+        <li><span class="hi">रविवार आरती केवल सायंकाल।</span><span class="en">Sunday Aarti is evening only.</span></li>
+      </ul></div>
+      <div class="guide-block"><h3>⚠️ <span class="hi">सुरक्षा</span><span class="en">Safety</span></h3><ul>
+        <li><span class="hi">कीमती वस्तुएँ सुरक्षित रखें।</span><span class="en">Keep valuables secure.</span></li>
+        <li><span class="hi">बच्चों का हाथ पकड़े रखें।</span><span class="en">Hold children's hands near the river.</span></li>
+        <li><span class="hi">नदी में प्लास्टिक न फेंकें।</span><span class="en">No plastic in the river.</span></li>
+        <li><span class="hi">प्रवेश पूर्णतः निःशुल्क।</span><span class="en">Entry is completely free.</span></li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-om">ॐ</span>
+  <ul class="footer-links">
+    <li><a href="index.html#history"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
+    <li><a href="timings.html"><span class="hi">समय</span><span class="en">Timings</span></a></li>
+    <li><a href="calendar.html"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
+    <li><a href="booking.html"><span class="hi">बुकिंग</span><span class="en">Booking</span></a></li>
+    <li><a href="gallery.html"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
+    <li><a href="donate.html"><span class="hi">दान</span><span class="en">Donate</span></a></li>
+    <li><a href="contact.html"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
+  </ul>
+  <p>© 2025 माँ गंगा सेवा परिवार आरती मंडली समिति · Sarsaiya Ghat, Kanpur, UP</p>
+  <p class="footer-note">हर हर गंगे &nbsp;·&nbsp; Har Har Gange &nbsp;·&nbsp; जय माँ गंगा</p>
+  <a href="admin.html" class="admin-footer-btn" title="Admin Panel">ॐ</a>
+</footer>
+
+<script>
+function setLang(lang){document.body.className='lang-'+lang;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));document.querySelector('.lang-btn[onclick="setLang(\''+lang+'\')"]').classList.add('active');localStorage.setItem('siteLang',lang);}
+(function(){const saved=localStorage.getItem('siteLang')||'hi';document.body.className='lang-'+saved;const btn=document.querySelector('.lang-btn[onclick="setLang(\''+saved+'\')"]');if(btn){document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}})();
+function closeMenu(){const cb=document.getElementById('hamburger');if(cb)cb.checked=false;}
+document.addEventListener('click',function(e){const nav=document.querySelector('nav');const hamburger=document.getElementById('hamburger');if(hamburger&&hamburger.checked&&!nav.contains(e.target))hamburger.checked=false;});
+</script>
+</body>
+</html>

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>दान — माँ गंगा सेवा परिवार</title>
+<link rel="stylesheet" href="style.css">
+
+<!-- ═══ LOAD CONFIG FIRST ═══ -->
+<script src="config.js"></script>
+
+<!-- ═══ FIREBASE SDK ═══ -->
+<script type="module">
+  /*
+   * FIX: Firebase config ko config.js se load karna reliably kaam nahi karta
+   * jab Firebase modules ES module context mein hote hain.
+   * Solution: config.js ek global window.firebaseConfig object expose karta hai,
+   * aur hum usse module mein window ke through access karte hain.
+   * Ensure karo ki config.js mein ye format ho:
+   *
+   * window.firebaseConfig = {
+   *   apiKey: "...",
+   *   authDomain: "...",
+   *   projectId: "...",
+   *   storageBucket: "...",
+   *   messagingSenderId: "...",
+   *   appId: "..."
+   * };
+   */
+
+  import { initializeApp }      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp }
+                                from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  function waitForConfig(retries = 20) {
+    return new Promise((resolve, reject) => {
+      const check = (n) => {
+        if (window.firebaseConfig) return resolve(window.firebaseConfig);
+        if (n <= 0) return reject(new Error("firebaseConfig not found in window"));
+        setTimeout(() => check(n - 1), 100);
+      };
+      check(retries);
+    });
+  }
+
+  try {
+    const cfg = await waitForConfig();
+    const app = initializeApp(cfg);
+    const db  = getFirestore(app);
+    window._db         = db;
+    window._addDoc     = addDoc;
+    window._collection = collection;
+    window._serverTs   = serverTimestamp;
+    window._fbReady    = true;
+    console.log("✅ Firebase ready");
+  } catch (e) {
+    console.warn("⚠️ Firebase init failed:", e.message);
+    window._fbReady = false;
+  }
+</script>
+
+<style>
+#donate {
+  background: linear-gradient(135deg, #1A0500, #3D1500);
+  padding: 80px 2rem 60px;
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+}
+#donate::before {
+  content: 'ॐ';
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 28rem;
+  color: rgba(212, 160, 23, 0.03);
+  line-height: 1; pointer-events: none;
+}
+.donate-section-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+
+/* ── Spinner Overlay ── */
+.spinner-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(10, 3, 0, 0.85); z-index: 9999;
+  flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+}
+.spinner-overlay.show { display: flex; }
+.spinner {
+  width: 56px; height: 56px; border-radius: 50%;
+  border: 5px solid rgba(212, 160, 23, 0.2);
+  border-top-color: #FF6B00;
+  animation: spin 0.85s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin-msg {
+  font-family: 'Cinzel', serif; font-size: 0.88rem;
+  letter-spacing: 2px; color: #F2C94C; text-align: center;
+}
+
+/* ── Pending Notice Box ── */
+.pending-notice {
+  display: none;
+  margin: 20px 0 0;
+  background: rgba(255, 107, 0, 0.1);
+  border: 1px solid rgba(255, 107, 0, 0.4);
+  border-radius: 10px;
+  padding: 18px 22px;
+  color: #F2C94C;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  text-align: center;
+}
+.pending-notice.show { display: block; }
+.pending-notice strong { color: #FF6B00; font-size: 1rem; }
+</style>
+</head>
+<body class="lang-hi">
+
+<!-- Spinner -->
+<div class="spinner-overlay" id="spinnerOverlay">
+  <div class="spinner"></div>
+  <div class="spin-msg hi">दान सुरक्षित हो रहा है…</div>
+  <div class="spin-msg en" style="display:none">Saving your donation…</div>
+</div>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="Logo.png" alt="Logo" class="nav-logo-img" onerror="this.style.display='none'">
+    <div class="nav-logo-text">
+      <span class="hi">माँ गंगा सेवा परिवार आरती मंडली समिति</span>
+      <span class="en">Maa Ganga Seva Pariwar Aarti Mandali Samiti</span>
+      <small>
+        <span class="hi">हर हर गंगे · सरसैया घाट, कानपुर</span>
+        <span class="en">Har Har Gange · Sarsaiya Ghat, Kanpur</span>
+      </small>
+    </div>
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="index.html#history"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
+      <li><a href="timings.html"><span class="hi">समय</span><span class="en">Timings</span></a></li>
+      <li><a href="calendar.html"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
+      <li><a href="booking.html"><span class="hi">आरती बुक करें</span><span class="en">Book Aarti</span></a></li>
+      <li><a href="gallery.html"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
+      <li><a href="visit.html"><span class="hi">मार्गदर्शिका</span><span class="en">Guide</span></a></li>
+      <li><a href="donate.html" class="active"><span class="hi">दान</span><span class="en">Donate</span></a></li>
+      <li><a href="contact.html"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
+    </ul>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('hi')">हिंदी</button>
+      <button class="lang-btn" onclick="setLang('en')">ENG</button>
+    </div>
+    <input type="checkbox" id="hamburger" class="hamburger-checkbox">
+    <label for="hamburger" class="hamburger-btn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </label>
+  </div>
+  <ul class="mobile-nav">
+    <li><a href="index.html#history" onclick="closeMenu()"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
+    <li><a href="timings.html"       onclick="closeMenu()"><span class="hi">समय</span><span class="en">Timings</span></a></li>
+    <li><a href="calendar.html"      onclick="closeMenu()"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
+    <li><a href="booking.html"       onclick="closeMenu()"><span class="hi">आरती बुक करें</span><span class="en">Book Aarti</span></a></li>
+    <li><a href="gallery.html"       onclick="closeMenu()"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
+    <li><a href="visit.html"         onclick="closeMenu()"><span class="hi">मार्गदर्शिका</span><span class="en">Guide</span></a></li>
+    <li><a href="donate.html"        onclick="closeMenu()"><span class="hi">दान</span><span class="en">Donate</span></a></li>
+    <li><a href="contact.html"       onclick="closeMenu()"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
+  </ul>
+</nav>
+
+<!-- ═══ DONATE PAGE ═══ -->
+<div id="donate" style="padding-top:90px;">
+  <div class="donate-section-inner">
+    <div class="section-header">
+      <span class="section-eyebrow hi">सेवा अर्पण</span>
+      <span class="section-eyebrow en">Seva Contribution</span>
+      <h2 class="section-title hi">आरती में सहयोग करें</h2>
+      <h2 class="section-title en">Support the Aarti</h2>
+      <div class="section-line"></div>
+      <p class="section-desc hi">आपका दान आरती, घाट रखरखाव, पुजारियों के कल्याण और माँ गंगा की स्वच्छता अभियान में सहयोग करता है।</p>
+      <p class="section-desc en">Your donation supports the Aarti, ghat maintenance, priests' welfare, and our river conservation mission.</p>
+    </div>
+
+    <div class="donate-layout">
+
+      <!-- QR / UPI block -->
+      <div class="qr-block">
+        <div class="qr-frame">
+          <img src="Payment QR.jpeg" alt="Donation QR Code"
+               style="width:180px;height:180px;display:block;"
+               onerror="this.outerHTML='<div class=\'qr-fallback\'><div style=\'font-size:3rem;\'>📱</div><div style=\'font-size:0.7rem;color:#888;margin-top:6px;\'>Scan to Pay<br>UPI QR Code</div></div>'">
+        </div>
+        <p class="qr-caption">
+          <span class="hi">UPI / स्कैन करके दान करें</span>
+          <span class="en">Scan &amp; Donate via UPI</span>
+        </p>
+        <p class="upi-link-text">
+          <a href="upi://pay?pa=vt665962@okaxis&pn=Maa%20Ganga%20Seva&tn=Donation%20for%20Ganga%20Aarti&cu=INR"
+             onclick="return handleUpiClick(event)"
+             style="color:var(--saffron);text-decoration:underline;cursor:pointer;">
+            UPI: vt665962@okaxis ↗
+          </a>
+        </p>
+        <div class="upi-app-buttons">
+          <a class="upi-app-btn" href="gpay://upi/pay?pa=vt665962@okaxis&pn=MaaGangaSeva&cu=INR"  onclick="return handleUpiClick(event)">🟢 GPay</a>
+          <a class="upi-app-btn" href="phonepe://pay?pa=vt665962@okaxis&pn=MaaGangaSeva&cu=INR"  onclick="return handleUpiClick(event)">🟣 PhonePe</a>
+          <a class="upi-app-btn" href="paytmmp://pay?pa=vt665962@okaxis&pn=MaaGangaSeva&cu=INR" onclick="return handleUpiClick(event)">🔵 Paytm</a>
+        </div>
+      </div>
+
+      <!-- Donation Form -->
+      <div class="donate-form-box">
+        <h3>🌸 <span class="hi">दान फॉर्म</span><span class="en">Donation Form</span></h3>
+
+        <div class="form-group">
+          <label class="hi">पूरा नाम *</label><label class="en">Full Name *</label>
+          <input type="text" id="dName" placeholder="Your full name" required>
+        </div>
+        <div class="form-group">
+          <label class="hi">मोबाइल नंबर *</label><label class="en">Mobile Number *</label>
+          <input type="tel" id="dPhone" placeholder="+91 XXXXX XXXXX" required>
+        </div>
+        <div class="form-group">
+          <label class="hi">ईमेल *</label><label class="en">Email *</label>
+          <input type="email" id="dEmail" placeholder="your.email@gmail.com" required>
+        </div>
+        <div class="form-group">
+          <label class="hi">दान राशि (₹) *</label><label class="en">Donation Amount (₹) *</label>
+          <input type="number" id="dAmount" placeholder="e.g. 501, 1100, 2100..." min="1" required>
+        </div>
+        <div class="form-group">
+          <label class="hi">भुगतान विधि</label><label class="en">Payment Method</label>
+          <select id="dMethod" onchange="updateTransactionField()">
+            <option value="Online Payment">Online Payment (UPI / QR)</option>
+            <option value="Cash at Ghat">Cash at Ghat (घाट पर नकद)</option>
+          </select>
+        </div>
+        <div class="form-group" id="transactionGroup">
+          <label>
+            Transaction ID / UTR No.
+            <span class="hi">(ऑनलाइन भुगतान के लिए)</span>
+            <span class="en">(For Online Payment)</span>
+          </label>
+          <input type="text" id="dTransactionId" placeholder="Enter Transaction ID or UPI Ref No.">
+        </div>
+        <div class="form-group">
+          <label class="hi">संदेश (वैकल्पिक)</label><label class="en">Message (Optional)</label>
+          <textarea id="dMsg" placeholder="Special dedication, prayer request, occasion..."></textarea>
+        </div>
+
+        <button class="donate-submit" onclick="processDonation()">
+          <span class="hi">दान जमा करें 🙏</span>
+          <span class="en">Submit Donation 🙏</span>
+        </button>
+
+        <!--
+          ═══ PENDING NOTICE ═══
+          Ye tab dikhega jab form successfully submit ho jaaye.
+          Donor ko batata hai ki receipt email mein aayegi admin approval ke baad.
+        -->
+<div class="pending-notice" id="pendingNotice" style="
+            text-align: center;
+            border: 1px dashed var(--gold);
+            padding: 28px 22px;
+            background: rgba(255,107,0,0.04);
+            border-radius: 10px;
+            margin-top: 20px;">
+
+          <!-- Big thank you -->
+          <div style="font-size: 2rem; margin-bottom: 10px;">🙏</div>
+          <strong style="color: #25D366; font-size: 1.25rem; font-family: 'Cinzel', serif; letter-spacing: 1px; display: block; margin-bottom: 14px;">
+            धन्यवाद / Thank You!
+          </strong>
+
+          <!-- Hindi -->
+          <p class="hi" style="font-size: 1rem; line-height: 1.8; color: rgba(253,245,230,0.85); margin: 0 0 10px;">
+            माँ गंगा सेवा परिवार में आपके सहयोग के लिए हृदय से धन्यवाद।<br>
+          </p>
+
+          <!-- English -->
+          <p class="en" style="display:none; font-size: 1rem; line-height: 1.8; color: rgba(253,245,230,0.85); margin: 0 0 10px;">
+            Thank you from the heart for your sacred contribution.<br>
+          </p>
+
+          <!-- Reference number -->
+          <div style="
+              margin: 18px auto 0;
+              display: inline-block;
+              background: rgba(212,160,23,0.1);
+              border: 1px solid rgba(212,160,23,0.35);
+              border-radius: 6px;
+              padding: 10px 20px;">
+            <small style="color: rgba(253,245,230,0.5); font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 4px;">Reference Number</small>
+            <span style="color:#F2C94C; font-family:'Cinzel',serif; letter-spacing:1px; font-size: 0.95rem;" id="receiptRefDisplay"></span>
+          </div>
+
+          <p style="margin: 20px 0 0; color: var(--pale-gold); font-size: 1.2rem; font-weight: bold;">
+            हर हर गंगे 🌊
+          </p>
+        </div>
+
+      </div><!-- /.donate-form-box -->
+
+    </div><!-- /.donate-layout -->
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <span class="footer-om">ॐ</span>
+  <ul class="footer-links">
+    <li><a href="index.html#history"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
+    <li><a href="timings.html"><span class="hi">समय</span><span class="en">Timings</span></a></li>
+    <li><a href="calendar.html"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
+    <li><a href="booking.html"><span class="hi">बुकिंग</span><span class="en">Booking</span></a></li>
+    <li><a href="gallery.html"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
+    <li><a href="donate.html"><span class="hi">दान</span><span class="en">Donate</span></a></li>
+    <li><a href="contact.html"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
+  </ul>
+  <p>© 2025 माँ गंगा सेवा परिवार आरती मंडली समिति · Sarsaiya Ghat, Kanpur, UP</p>
+  <p class="footer-note">हर हर गंगे &nbsp;·&nbsp; Har Har Gange &nbsp;·&nbsp; जय माँ गंगा</p>
+  <a href="admin.html" class="admin-footer-btn" title="Admin Panel">ॐ</a>
+</footer>
+
+<!-- ═══ SCRIPTS ═══ -->
+<script>
+/* ── Language ── */
+function setLang(lang) {
+  document.body.className = 'lang-' + lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.lang-btn[onclick="setLang(\'' + lang + '\')"]').classList.add('active');
+  localStorage.setItem('siteLang', lang);
+}
+(function () {
+  const saved = localStorage.getItem('siteLang') || 'hi';
+  document.body.className = 'lang-' + saved;
+  const btn = document.querySelector('.lang-btn[onclick="setLang(\'' + saved + '\')"]');
+  if (btn) {
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+})();
+
+/* ── Mobile menu ── */
+function closeMenu() {
+  const cb = document.getElementById('hamburger');
+  if (cb) cb.checked = false;
+}
+document.addEventListener('click', function (e) {
+  const nav = document.querySelector('nav');
+  const hb  = document.getElementById('hamburger');
+  if (hb && hb.checked && !nav.contains(e.target)) hb.checked = false;
+});
+
+/* ── Toast ── */
+function showToast(msg) {
+  document.querySelectorAll('.toast').forEach(t => t.remove());
+  const t = document.createElement('div');
+  t.className  = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => { if (t.parentNode) t.remove(); }, 4500);
+}
+
+/* ── UPI mobile check ── */
+function handleUpiClick(e) {
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if (!isMobile) {
+    e.preventDefault();
+    showToast('📱 UPI links work on mobile only. Please scan QR code on desktop.');
+    return false;
+  }
+  return true;
+}
+
+/* ── Transaction field toggle ── */
+function updateTransactionField() {
+  const method = document.getElementById('dMethod').value;
+  const group  = document.getElementById('transactionGroup');
+  const input  = document.getElementById('dTransactionId');
+
+  if (method === 'Online Payment') {
+    group.style.display = 'block';
+    input.disabled      = false;
+    input.required      = true;
+  } else {
+    group.style.display = 'none';
+    input.disabled      = true;
+    input.required      = false;
+    input.value         = '';
+  }
+}
+updateTransactionField();
+
+/* ── Spinner ── */
+function showSpinner() { document.getElementById('spinnerOverlay').classList.add('show'); }
+function hideSpinner() { document.getElementById('spinnerOverlay').classList.remove('show'); }
+
+
+async function processDonation() {
+  const name   = document.getElementById('dName').value.trim();
+  const phone  = document.getElementById('dPhone').value.trim();
+  const email  = document.getElementById('dEmail').value.trim();
+  const amount = document.getElementById('dAmount').value.trim();
+  const method = document.getElementById('dMethod').value;
+  let   txn    = document.getElementById('dTransactionId').value.trim();
+  const msg    = document.getElementById('dMsg').value.trim();
+
+  /* ── Validation ── */
+  if (!name || !phone || !email || !amount) {
+    showToast('⚠️ कृपया सभी आवश्यक फील्ड भरें / Please fill all required fields');
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showToast('⚠️ कृपया सही ईमेल दर्ज करें / Please enter a valid email');
+    return;
+  }
+  if (method === 'Online Payment' && !txn) {
+    showToast('⚠️ कृपया Transaction ID दर्ज करें / Please enter Transaction ID for online payment');
+    return;
+  }
+  if (method === 'Cash at Ghat') txn = '';
+
+  const now       = new Date();
+  const receiptNo = 'MGSP-'
+    + now.getFullYear()
+    + String(now.getMonth() + 1).padStart(2, '0')
+    + String(now.getDate()).padStart(2, '0')
+    + '-' + Math.floor(Math.random() * 9000 + 1000);
+  const dateStr = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+  const timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+
+  showSpinner();
+
+  const saved = await saveToFirestore({ name, phone, email, amount, method, txn, msg, receiptNo, dateStr, timeStr });
+
+  hideSpinner();
+
+  if (saved) {
+    /* Show pending notice — NO PDF, NO immediate receipt */
+    const notice = document.getElementById('pendingNotice');
+    notice.classList.add('show');
+    document.getElementById('receiptRefDisplay').textContent =
+      'Reference No: ' + receiptNo;
+
+    ['dName', 'dPhone', 'dEmail', 'dAmount', 'dMsg', 'dTransactionId'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    notice.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } else {
+    showToast('⚠️ कुछ गड़बड़ हुई, कृपया दोबारा कोशिश करें / Something went wrong, please try again.');
+  }
+}
+
+
+async function saveToFirestore(data) {
+  try {
+    if (!window._fbReady) {
+      console.warn('Firebase not ready. Donation NOT saved.');
+      console.warn('_db:', window._db);
+      console.warn('_addDoc:', window._addDoc);
+      console.warn('_collection:', window._collection);
+      showToast('⚠️ Firebase not connected. Refreshing page...');
+      setTimeout(() => location.reload(), 2000);
+      return false;
+    }
+
+    console.log('Saving donation to Firestore...');
+    
+    await window._addDoc(
+      window._collection(window._db, 'donations'),
+      {
+        /* ── Donor Information ── */
+        receiptNo:     data.receiptNo,
+        donorName:     data.name,
+        donorEmail:    data.email,
+        phone:         data.phone,
+        amount:        Number(data.amount),
+        method:        data.method,
+        transactionId: data.txn   || '',
+        message:       data.msg   || '',
+        dateStr:       data.dateStr,
+        timeStr:       data.timeStr,
+        createdAt:     window._serverTs(),
+
+        /*
+         * ── STATUS ──
+         * 'Pending'  → Admin panel mein review karo
+         * 'Approved' → Admin click kare tab Firebase Extension email bhejega
+         * 'Rejected' → Admin reject kar sakta hai (optional)
+         */
+        status: 'Pending',
+
+        // ── EMAIL NOTE ──
+        // The thank-you email is built and sent by admin.html when admin
+        // clicks "Approve". Firebase Trigger Email Extension handles delivery
+        // by watching for: { status:'Approved', to:'...', message:{subject,html} }
+      }
+    );
+
+    console.log('✅ Donation saved with status: Pending');
+    return true;
+
+  } catch (err) {
+    console.error('❌ Firestore error:', err);
+    return false;
+  }
+}
+</script>
+</body>
+</html>

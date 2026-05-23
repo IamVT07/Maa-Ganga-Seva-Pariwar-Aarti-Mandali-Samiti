@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - माँ गंगा सेवा परिवार</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+  <!-- EmailJS SDK — donor ko Thank You email bhejne ke liye -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+  <style>
+    :root {
+      --saffron: #FF6B00;
+      --deep-saffron: #E55A00;
+      --gold: #D4A017;
+      --pale-gold: #F2C94C;
+      --cream: #FDF5E6;
+      --dark: #1A0A00;
+      --mid: #3D1C00;
+      --river: #1B4F7A;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--dark);
+      color: var(--cream);
+      font-family: 'EB Garamond', serif;
+      overflow-x: hidden;
+    }
+
+    .admin-header {
+      background: linear-gradient(135deg, var(--mid), #0D0A1A);
+      border-bottom: 3px solid var(--saffron);
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .admin-header h1 {
+      font-family: 'Cinzel Decorative', cursive;
+      color: var(--pale-gold);
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .admin-header p { color: rgba(253, 245, 230, 0.7); font-size: 0.9rem; }
+
+    .admin-container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+
+    .admin-section {
+      background: rgba(61, 28, 0, 0.4);
+      border: 1px solid rgba(212, 160, 23, 0.3);
+      border-radius: 8px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .admin-section h2 {
+      color: var(--pale-gold);
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      font-family: 'Cinzel', serif;
+      border-bottom: 2px solid rgba(212, 160, 23, 0.3);
+      padding-bottom: 0.8rem;
+    }
+
+    .form-group { margin-bottom: 1.2rem; }
+
+    .form-group label {
+      display: block;
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      letter-spacing: 1.5px;
+      color: rgba(242, 201, 76, 0.8);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: rgba(26, 10, 0, 0.6);
+      border: 1px solid rgba(212, 160, 23, 0.3);
+      color: var(--cream);
+      padding: 0.8rem 1rem;
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+      border-radius: 4px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--saffron);
+      box-shadow: 0 0 10px rgba(255, 107, 0, 0.2);
+    }
+
+    .form-group textarea { resize: vertical; min-height: 100px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .btn {
+      background: linear-gradient(135deg, var(--saffron), var(--deep-saffron));
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: transform 0.2s, box-shadow 0.3s;
+      font-weight: 700;
+    }
+
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 107, 0, 0.4); }
+    .btn-secondary { background: linear-gradient(135deg, var(--gold), var(--pale-gold)); color: var(--dark); }
+    .btn-danger { background: linear-gradient(135deg, #ff6b6b, #ee5a52); }
+
+    .events-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+
+    .event-card {
+      background: rgba(255, 107, 0, 0.08);
+      border: 1px solid rgba(255, 107, 0, 0.3);
+      border-radius: 6px;
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .event-card h4 { color: var(--pale-gold); font-size: 1.1rem; margin-bottom: 0.5rem; font-family: 'Cinzel', serif; }
+    .event-card p { color: rgba(253, 245, 230, 0.7); font-size: 0.9rem; margin-bottom: 0.3rem; }
+    .event-card .event-date { color: var(--saffron); font-weight: bold; margin-top: 0.8rem; }
+    .event-card .event-actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
+
+    .btn-small { padding: 0.4rem 0.8rem; font-size: 0.7rem; flex: 1; }
+
+    .alert { padding: 1rem 1.5rem; border-radius: 4px; margin-bottom: 1.5rem; font-size: 0.95rem; }
+    .alert-success { background: rgba(37, 211, 102, 0.2); border: 1px solid rgba(37, 211, 102, 0.4); color: #25D366; }
+    .alert-error   { background: rgba(255, 107, 107, 0.2); border: 1px solid rgba(255, 107, 107, 0.4); color: #FF6B6B; }
+    .alert-info    { background: rgba(45, 125, 181, 0.2); border: 1px solid rgba(45, 125, 181, 0.4); color: #2E7DB5; }
+
+    .loading {
+      display: inline-block;
+      width: 1rem; height: 1rem;
+      border: 2px solid rgba(242, 201, 76, 0.3);
+      border-top-color: var(--pale-gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .logout-btn { position: fixed; top: 1rem; right: 1rem; z-index: 1000; }
+
+    .auth-section {
+      background: rgba(61, 28, 0, 0.4);
+      border: 1px solid rgba(212, 160, 23, 0.3);
+      border-radius: 8px;
+      padding: 2rem;
+      max-width: 400px;
+      margin: 5rem auto;
+      text-align: center;
+    }
+
+    .auth-section h2 { color: var(--pale-gold); margin-bottom: 1.5rem; }
+
+    @media (max-width: 768px) {
+      .form-row { grid-template-columns: 1fr; }
+      .admin-header h1 { font-size: 1.5rem; }
+      .events-list { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="admin-header">
+  <h1>🪔 Admin Panel</h1>
+  <p>माँ गंगा सेवा परिवार — Event Management / Event प्रबंधन</p>
+</div>
+
+<button class="btn btn-danger logout-btn" id="logoutBtn" style="display:none;" onclick="logoutAdmin()">Logout</button>
+
+<!-- LOGIN SECTION -->
+<div id="authSection" class="auth-section">
+  <h2>Admin Login</h2>
+  <div class="form-group">
+    <label>Admin Password</label>
+    <input type="password" id="adminPassword" placeholder="Enter admin password"
+           onkeydown="if(event.key==='Enter') loginAdmin()">
+  </div>
+  <button class="btn" onclick="loginAdmin()">Login</button>
+  <div id="loginMsg" style="margin-top:1rem;"></div>
+</div>
+
+<!-- ADMIN SECTION -->
+<div id="adminContent" style="display:none;">
+  <div class="admin-container">
+
+    <!-- Add Event Form -->
+    <div class="admin-section">
+      <h2>➕ Add New Event</h2>
+      <div id="statusMessage"></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Event Date *</label>
+          <input type="date" id="eventDate" required>
+        </div>
+        <div class="form-group">
+          <label>Event Title (English) *</label>
+          <input type="text" id="eventTitle" placeholder="e.g., Kartik Purnima" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Event Description (English) *</label>
+        <textarea id="eventDescEn" placeholder="Event description in English" required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Event Description (Hindi)</label>
+        <textarea id="eventDescHi" placeholder="Event description in Hindi"></textarea>
+      </div>
+      <button class="btn" onclick="addEvent()">Add Event to Calendar</button>
+    </div>
+
+    <!-- Events List -->
+    <div class="admin-section">
+      <h2>📅 Events on Calendar</h2>
+      <div id="eventsList" class="events-list"></div>
+    </div>
+
+    <!-- Pending Donations -->
+    <div class="admin-section">
+      <h2>💰 Pending Donations Awaiting Approval</h2>
+      <p style="color:rgba(253,245,230,0.6);font-size:0.9rem;margin-bottom:1.5rem;">
+        Review donor information below. Click <strong>"Approve"</strong> to verify payment and automatically send a receipt email to the donor.
+      </p>
+      <div id="donationsList" style="display:grid;gap:1.5rem;"></div>
+    </div>
+
+    <!-- System Status -->
+    <div class="admin-section">
+      <h2>⚙️ System Status</h2>
+      <div id="firebaseStatus" style="color:rgba(253,245,230,0.7);">
+        <p>🔄 Login karein — Firebase tab connect hoga.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     STEP 1: config.js load karo SABSE PEHLE
+     Isi file mein FIREBASE_CONFIG, EMAILJS keys,
+     aur ADMIN_PASSWORD hoti hai
+════════════════════════════════════════════ -->
+<script src="config.js"></script>
+
+<!-- STEP 2: Firebase SDK (Compat version) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script>
+// ════════════════════════════════════════════
+//  STATE VARIABLES
+// ════════════════════════════════════════════
+let firebaseInitialized = false;
+let isLoggedIn          = false;
+let fsDb                = null;
+let _donationsUnsub     = null;   // Real-time listener handle
+
+// ════════════════════════════════════════════
+//  FIREBASE INIT
+//  config.js se window.FIREBASE_CONFIG padho
+// ════════════════════════════════════════════
+function waitForFirebase(callback, retries = 50) {
+  if (typeof firebase !== 'undefined' && firebase.apps) {
+    callback();
+  } else if (retries > 0) {
+    setTimeout(() => waitForFirebase(callback, retries - 1), 100);
+  } else {
+    updateFirebaseStatus('❌ Firebase SDK load nahi hua', true);
+  }
+}
+
+function initFirebase() {
+  try {
+    // Agar already initialized hai to sirf Firestore reference lo
+    if (firebase.apps.length > 0) {
+      fsDb = firebase.firestore();
+      firebaseInitialized = true;
+      updateFirebaseStatus('✅ Firestore se connected (already initialized)');
+      afterFirebaseReady();
+      return;
+    }
+
+    // config.js se Firebase config lo
+    const cfg = window.FIREBASE_CONFIG || window.firebaseConfig;
+    if (!cfg || cfg.apiKey === 'YOUR_FIREBASE_API_KEY') {
+      throw new Error('config.js mein FIREBASE_CONFIG fill nahi ki! Apni Firebase keys daalo.');
+    }
+
+    firebase.initializeApp(cfg);
+    fsDb = firebase.firestore();
+    firebaseInitialized = true;
+    updateFirebaseStatus('✅ Firestore se connected — Project: ' + cfg.projectId);
+    afterFirebaseReady();
+
+  } catch (err) {
+    console.error('Firebase init error:', err);
+    updateFirebaseStatus('❌ Firebase Error: ' + err.message, true);
+  }
+}
+
+function afterFirebaseReady() {
+  loadEvents();
+  loadPendingDonations();
+  initEmailJS();   // EmailJS bhi initialize karo
+}
+
+// ════════════════════════════════════════════
+//  EMAILJS INIT
+//  config.js se window.EMAILJS_PUBLIC_KEY padho
+// ════════════════════════════════════════════
+function initEmailJS() {
+  try {
+    const pubKey = window.EMAILJS_PUBLIC_KEY;
+    if (!pubKey || pubKey === 'YOUR_PUBLIC_KEY') {
+      console.warn('⚠️ EmailJS Public Key config.js mein set nahi ki — email nahi jayega');
+      return;
+    }
+    if (typeof emailjs === 'undefined') {
+      console.warn('⚠️ EmailJS SDK load nahi hua');
+      return;
+    }
+    emailjs.init({ publicKey: pubKey });
+    console.log('✅ EmailJS initialized');
+  } catch (err) {
+    console.error('EmailJS init error:', err);
+  }
+}
+
+// ════════════════════════════════════════════
+//  FIREBASE STATUS
+// ════════════════════════════════════════════
+function updateFirebaseStatus(message, isError = false) {
+  const el = document.getElementById('firebaseStatus');
+  el.innerHTML = `<p style="color:${isError ? '#FF6B6B' : '#25D366'};">${message}</p>`;
+}
+
+// ════════════════════════════════════════════
+//  ADMIN LOGIN / LOGOUT
+// ════════════════════════════════════════════
+function loginAdmin() {
+  const entered  = document.getElementById('adminPassword').value;
+  // config.js se ADMIN_PASSWORD lo
+  const correct  = window.ADMIN_PASSWORD || (typeof ADMIN_PASSWORD !== 'undefined' ? ADMIN_PASSWORD : null);
+
+  if (!correct || correct === 'YOUR_ADMIN_PASSWORD') {
+    showLoginMsg('⚠️ config.js mein ADMIN_PASSWORD set karein!', '#F2C94C');
+    return;
+  }
+
+  if (entered === correct) {
+    isLoggedIn = true;
+    localStorage.setItem('adminLogin', 'true');
+    document.getElementById('authSection').style.display  = 'none';
+    document.getElementById('adminContent').style.display = 'block';
+    document.getElementById('logoutBtn').style.display    = 'block';
+    waitForFirebase(initFirebase);
+  } else {
+    showLoginMsg('❌ Galat password!', '#FF6B6B');
+    document.getElementById('adminPassword').value = '';
+  }
+}
+
+function logoutAdmin() {
+  isLoggedIn = false;
+  localStorage.removeItem('adminLogin');
+  if (_donationsUnsub) { _donationsUnsub(); _donationsUnsub = null; }
+  document.getElementById('authSection').style.display  = 'block';
+  document.getElementById('adminContent').style.display = 'none';
+  document.getElementById('logoutBtn').style.display    = 'none';
+  document.getElementById('adminPassword').value        = '';
+}
+
+function showLoginMsg(msg, color) {
+  const el = document.getElementById('loginMsg');
+  el.style.color = color;
+  el.textContent = msg;
+  setTimeout(() => el.textContent = '', 3000);
+}
+
+// ════════════════════════════════════════════
+//  EVENTS — ADD / LOAD / DELETE
+// ════════════════════════════════════════════
+function addEvent() {
+  if (!isLoggedIn)                    return showMessage('❌ Pehle login karein', 'error');
+  if (!firebaseInitialized || !fsDb)  return showMessage('❌ Firebase connected nahi', 'error');
+
+  const date   = document.getElementById('eventDate').value;
+  const title  = document.getElementById('eventTitle').value.trim();
+  const descEn = document.getElementById('eventDescEn').value.trim();
+  const descHi = document.getElementById('eventDescHi').value.trim();
+
+  if (!date || !title || !descEn) return showMessage('⚠️ Starred (*) fields required hain', 'error');
+
+  fsDb.collection('events').add({
+    date, title,
+    en:        descEn,
+    hi:        descHi || descEn,
+    timestamp: new Date().toISOString()
+  }).then(() => {
+    showMessage('✅ Event add ho gaya! Calendar pe turant dikhega.', 'success');
+    document.getElementById('eventDate').value   = '';
+    document.getElementById('eventTitle').value  = '';
+    document.getElementById('eventDescEn').value = '';
+    document.getElementById('eventDescHi').value = '';
+    loadEvents();
+    syncEventsToLocalStorage();
+  }).catch(err => showMessage('❌ Error: ' + err.message, 'error'));
+}
+
+function loadEvents() {
+  if (!firebaseInitialized || !fsDb) {
+    document.getElementById('eventsList').innerHTML =
+      '<div style="grid-column:1/-1;color:#FF6B6B;padding:2rem;">⚠️ Firebase connected nahi hai.</div>';
+    return;
+  }
+
+  const list = document.getElementById('eventsList');
+  list.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;"><span class="loading"></span></div>';
+
+  const renderEvents = (docs) => {
+    const events = [];
+    docs.forEach(doc => events.push({ id: doc.id, ...doc.data() }));
+    events.sort((a, b) => (a.date > b.date ? 1 : -1));
+
+    if (events.length === 0) {
+      list.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:rgba(253,245,230,0.5);padding:2rem;">Abhi koi event nahi hai</div>';
+      return;
+    }
+
+    list.innerHTML = events.map(ev => `
+      <div class="event-card">
+        <h4>${ev.title}</h4>
+        <p>${ev.en}</p>
+        ${ev.hi && ev.hi !== ev.en ? `<p style="color:rgba(253,245,230,0.6);font-size:0.85rem;">${ev.hi}</p>` : ''}
+        <div class="event-date">📅 ${ev.date}</div>
+        <div class="event-actions">
+          <button class="btn btn-small btn-danger" onclick="deleteEvent('${ev.id}')">Delete</button>
+        </div>
+      </div>
+    `).join('');
+  };
+
+  fsDb.collection('events').orderBy('date').get()
+    .then(snap => renderEvents(snap))
+    .catch(err => {
+      if (err.code === 'failed-precondition') {
+        // Index nahi bana — without orderBy try karo
+        fsDb.collection('events').get().then(renderEvents);
+      } else {
+        list.innerHTML = `<div style="grid-column:1/-1;color:#FF6B6B;padding:2rem;">❌ ${err.message}</div>`;
+      }
+    });
+}
+
+function deleteEvent(eventId) {
+  if (!confirm('Kya aap is event ko delete karna chahte hain?')) return;
+  if (!fsDb) return showMessage('❌ Firebase connected nahi', 'error');
+
+  fsDb.collection('events').doc(eventId).delete()
+    .then(() => { showMessage('✅ Event delete ho gaya!', 'success'); loadEvents(); syncEventsToLocalStorage(); })
+    .catch(err => showMessage('❌ Error: ' + err.message, 'error'));
+}
+
+function syncEventsToLocalStorage() {
+  if (!fsDb) return;
+  fsDb.collection('events').get().then(snap => {
+    const events = {};
+    snap.forEach(doc => {
+      const ev = doc.data();
+      if (!ev.date) return;
+      if (!events[ev.date]) events[ev.date] = [];
+      events[ev.date].push({ title: ev.title, en: ev.en, hi: ev.hi });
+    });
+    localStorage.setItem('calendarEvents', JSON.stringify(events));
+    window.dispatchEvent(new StorageEvent('storage', {
+      key: 'calendarEvents', newValue: JSON.stringify(events), storageArea: localStorage
+    }));
+  }).catch(err => console.warn('syncEventsToLocalStorage error:', err));
+}
+
+// ════════════════════════════════════════════
+//  DONATIONS — LOAD / APPROVE / DELETE
+// ════════════════════════════════════════════
+function loadPendingDonations() {
+  if (!fsDb) return;
+
+  // Purana listener band karo
+  if (_donationsUnsub) { _donationsUnsub(); _donationsUnsub = null; }
+
+  const list = document.getElementById('donationsList');
+  list.innerHTML = '<div style="text-align:center;color:rgba(253,245,230,0.5);padding:2rem;">Loading… <span class="loading"></span></div>';
+
+  // Real-time listener — naya donation aate hi update hoga
+  _donationsUnsub = fsDb.collection('donations')
+    .where('status', '==', 'Pending')
+    .onSnapshot(snap => {
+      if (snap.empty) {
+        list.innerHTML = '<div style="text-align:center;color:rgba(253,245,230,0.5);padding:2rem;">✅ Koi pending donation nahi hai.</div>';
+        return;
+      }
+
+      const donations = [];
+      snap.forEach(doc => donations.push({ id: doc.id, ...doc.data() }));
+      donations.sort((a, b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0));
+
+      list.innerHTML = donations.map(d => `
+        <div style="background:rgba(255,107,0,0.08);border:1px solid rgba(255,107,0,0.3);border-radius:6px;padding:1.5rem;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+            <div>
+              <p style="color:rgba(242,201,76,0.8);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;margin:0 0 0.5rem;"><strong>Donor Name</strong></p>
+              <p style="color:var(--cream);margin:0;">${d.donorName || 'N/A'}</p>
+            </div>
+            <div>
+              <p style="color:rgba(242,201,76,0.8);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;margin:0 0 0.5rem;"><strong>Receipt No.</strong></p>
+              <p style="color:var(--cream);margin:0;">${d.receiptNo || 'N/A'}</p>
+            </div>
+            <div>
+              <p style="color:rgba(242,201,76,0.8);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;margin:0 0 0.5rem;"><strong>Amount</strong></p>
+              <p style="color:#FFD700;font-size:1.2rem;font-weight:bold;margin:0;">₹ ${d.amount || 0}/-</p>
+            </div>
+            <div>
+              <p style="color:rgba(242,201,76,0.8);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;margin:0 0 0.5rem;"><strong>Date</strong></p>
+              <p style="color:var(--cream);margin:0;">${d.dateStr || 'N/A'}</p>
+            </div>
+            <div>
+              <p style="color:rgba(242,201,76,0.8);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;margin:0 0 0.5rem;"><strong>Email</strong></p>
+              <p style="color:var(--cream);font-size:0.9rem;margin:0;word-break:break-all;">${d.donorEmail || 'N/A'}</p>
+            </div>
+            <div>
+              <p style="color:rgba(242,201,76,0.8);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;margin:0 0 0.5rem;"><strong>Method</strong></p>
+              <p style="color:var(--cream);margin:0;">${d.method || 'N/A'}</p>
+            </div>
+          </div>
+          ${d.transactionId ? `<p style="color:rgba(253,245,230,0.7);margin:0.5rem 0;"><strong>Txn ID:</strong> ${d.transactionId}</p>` : ''}
+          ${d.message ? `<p style="color:rgba(253,245,230,0.7);margin:0.5rem 0;"><strong>Message:</strong> ${d.message}</p>` : ''}
+          <div style="display:flex;gap:0.8rem;margin-top:1rem;">
+            <button onclick="approveDonation('${d.id}', this)"
+                    style="flex:1;padding:0.8rem;background:#FF6B00;color:white;border:none;border-radius:4px;cursor:pointer;font-weight:bold;font-size:0.9rem;">
+              ✅ Approve &amp; Send Thank You Email
+            </button>
+            <button onclick="deleteDonation('${d.id}')"
+                    style="flex:1;padding:0.8rem;background:#555;color:white;border:none;border-radius:4px;cursor:pointer;font-size:0.9rem;">
+              🗑️ Reject
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+    }, err => {
+      console.error('Donations listener error:', err);
+      // Firestore index nahi bani — fallback
+      if (err.code === 'failed-precondition' || err.message.includes('index')) {
+        fsDb.collection('donations').get().then(snap => {
+          const pending = [];
+          snap.forEach(doc => { const d = doc.data(); if (d.status === 'Pending') pending.push({ id: doc.id, ...d }); });
+          list.innerHTML = pending.length === 0
+            ? '<div style="text-align:center;color:rgba(253,245,230,0.5);padding:2rem;">✅ Koi pending donation nahi hai.</div>'
+            : `<div style="color:#F2C94C;padding:1rem;">⚠️ ${pending.length} pending donation(s) mili — Firestore index banana padega.</div>`;
+        });
+      } else {
+        list.innerHTML = `<div style="color:#FF6B6B;padding:1rem;">❌ Error: ${err.message}</div>`;
+      }
+    });
+}
+
+async function approveDonation(donationId, btn) {
+  if (!fsDb) return;
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Processing…'; }
+
+  try {
+    const docSnap = await fsDb.collection('donations').doc(donationId).get();
+    if (!docSnap.exists) {
+      showMessage('❌ Donation record nahi mila', 'error');
+      if (btn) { btn.disabled = false; btn.textContent = '✅ Approve & Send Thank You Email'; }
+      return;
+    }
+    const data = docSnap.data();
+
+    // Firestore update
+    await fsDb.collection('donations').doc(donationId).update({
+      status:     'Approved',
+      approvedAt: new Date().toISOString()
+    });
+
+    // EmailJS se Thank You email
+    const sent = await sendThankYouEmail(data);
+    showMessage(
+      sent
+        ? '✅ Approved! Email bhej diya: ' + data.donorEmail
+        : '✅ Approved! (Email nahi gaya — config.js mein EmailJS keys check karein)',
+      sent ? 'success' : 'info'
+    );
+
+  } catch (err) {
+    console.error('Approve error:', err);
+    showMessage('❌ Error: ' + err.message, 'error');
+    if (btn) { btn.disabled = false; btn.textContent = '✅ Approve & Send Thank You Email'; }
+  }
+}
+
+async function sendThankYouEmail(data) {
+  try {
+    if (typeof emailjs === 'undefined') { console.error('EmailJS SDK nahi mila'); return false; }
+
+    // config.js se keys lo
+    const svcId  = window.EMAILJS_SERVICE_ID;
+    const tplId  = window.EMAILJS_TEMPLATE_ID;
+    const pubKey = window.EMAILJS_PUBLIC_KEY;
+
+    if (!pubKey || pubKey === 'YOUR_PUBLIC_KEY') {
+      console.warn('⚠️ EmailJS config.js mein set nahi — email nahi gaya');
+      return false;
+    }
+
+    const params = {
+      donor_name:  data.donorName    || 'Donor',
+      donor_email: data.donorEmail   || '',
+      receipt_no:  data.receiptNo    || 'N/A',
+      amount:      data.amount       || '0',
+      method:      data.method       || 'N/A',
+      date:        data.dateStr      || new Date().toLocaleDateString('en-IN'),
+      txn_id:      data.transactionId || 'N/A',
+      message:     data.message      || ''
+    };
+
+    const res = await emailjs.send(svcId, tplId, params);
+    console.log('✅ EmailJS:', res.status, res.text);
+    return res.status === 200;
+
+  } catch (err) {
+    console.error('❌ EmailJS error:', err);
+    return false;
+  }
+}
+
+async function deleteDonation(donationId) {
+  if (!confirm('Kya aap is donation ko reject karna chahte hain?')) return;
+  if (!fsDb) return;
+  try {
+    await fsDb.collection('donations').doc(donationId).delete();
+    showMessage('✅ Donation reject karke hata diya gaya', 'success');
+  } catch (err) {
+    showMessage('❌ Error: ' + err.message, 'error');
+  }
+}
+
+// ════════════════════════════════════════════
+//  UTILITY
+// ════════════════════════════════════════════
+function showMessage(msg, type = 'info') {
+  const el = document.getElementById('statusMessage');
+  el.className = `alert alert-${type}`;
+  el.textContent = msg;
+  setTimeout(() => { el.textContent = ''; el.className = ''; }, 4000);
+}
+
+// Page load pe saved login check karo
+window.addEventListener('load', () => {
+  if (localStorage.getItem('adminLogin') === 'true') {
+    isLoggedIn = true;
+    document.getElementById('authSection').style.display  = 'none';
+    document.getElementById('adminContent').style.display = 'block';
+    document.getElementById('logoutBtn').style.display    = 'block';
+    waitForFirebase(initFirebase);
+  }
+});
+</script>
+
+</body>
+</html>
