@@ -3,16 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>लाइव आरती कैलेंडर — माँ गंगा सेवा परिवार</title>
+<title>लाइव आरती कैलेंडर — माँ गंगा सेवा परिवार आरती मंडली समिति</title>
 <link rel="stylesheet" href="style.css">
-<!-- Load config + Firebase Firestore to sync admin-added events -->
-<script src="config.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 </head>
 <body class="lang-hi">
 
-<!-- ═══════════════ NAV ═══════════════ -->
 <nav>
   <a href="index.html" class="nav-logo">
     <img src="Logo.png" alt="Logo" class="nav-logo-img" onerror="this.style.display='none'">
@@ -37,19 +32,19 @@
       <button class="lang-btn active" onclick="setLang('hi')">हिंदी</button>
       <button class="lang-btn" onclick="setLang('en')">ENG</button>
     </div>
+    <input type="checkbox" id="hamburger" class="hamburger-checkbox">
+    <label for="hamburger" class="hamburger-btn" aria-label="Menu"><span></span><span></span><span></span></label>
+    <ul class="mobile-nav">
+      <li><a href="index.html#history" onclick="closeMenu()"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
+      <li><a href="timings.html" onclick="closeMenu()"><span class="hi">समय</span><span class="en">Timings</span></a></li>
+      <li><a href="calendar.html" onclick="closeMenu()"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
+      <li><a href="booking.html" onclick="closeMenu()"><span class="hi">आरती बुक करें</span><span class="en">Book Aarti</span></a></li>
+      <li><a href="gallery.html" onclick="closeMenu()"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
+      <li><a href="visit.html" onclick="closeMenu()"><span class="hi">मार्गदर्शिका</span><span class="en">Guide</span></a></li>
+      <li><a href="donate.html" onclick="closeMenu()"><span class="hi">दान</span><span class="en">Donate</span></a></li>
+      <li><a href="contact.html" onclick="closeMenu()"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
+    </ul>
   </div>
-  <input type="checkbox" id="hamburger" class="hamburger-checkbox">
-  <label for="hamburger" class="hamburger-btn" aria-label="Menu"><span></span><span></span><span></span></label>
-  <ul class="mobile-nav">
-    <li><a href="index.html#history" onclick="closeMenu()"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
-    <li><a href="timings.html" onclick="closeMenu()"><span class="hi">समय</span><span class="en">Timings</span></a></li>
-    <li><a href="calendar.html" onclick="closeMenu()"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
-    <li><a href="booking.html" onclick="closeMenu()"><span class="hi">आरती बुक करें</span><span class="en">Book Aarti</span></a></li>
-    <li><a href="gallery.html" onclick="closeMenu()"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
-    <li><a href="visit.html" onclick="closeMenu()"><span class="hi">मार्गदर्शिका</span><span class="en">Guide</span></a></li>
-    <li><a href="donate.html" onclick="closeMenu()"><span class="hi">दान</span><span class="en">Donate</span></a></li>
-    <li><a href="contact.html" onclick="closeMenu()"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
-  </ul>
 </nav>
 
 <section id="calendar" style="background:linear-gradient(to bottom,#0D0A1A,#1A0500);padding-top:90px;">
@@ -108,69 +103,38 @@ function closeMenu(){const cb=document.getElementById('hamburger');if(cb)cb.chec
 document.addEventListener('click',function(e){const nav=document.querySelector('nav');const hamburger=document.getElementById('hamburger');if(hamburger&&hamburger.checked&&!nav.contains(e.target))hamburger.checked=false;});
 
 /* ════ CALENDAR ════ */
-let specialEvents={
+let specialEvents = {
   '2025-11-05':[{title:'Kartik Purnima',en:'Grand Maha Aarti — Sarsaiya Ghat',hi:'महाआरती — सरसैया घाट, कानपुर'}],
   '2026-02-26':[{title:'Maha Shivratri',en:'Night-long Aarti',hi:'रात्रिकालीन महाआरती'}],
   '2026-06-05':[{title:'Ganga Dussehra',en:'10-Day Special Aarti Begins',hi:'10-दिवसीय विशेष आरती'}],
   '2026-01-14':[{title:'Makar Sankranti',en:'Dawn Special Aarti',hi:'विशेष प्रातः आरती'}],
   '2026-03-19':[{title:'Navratri',en:'Chaitra Navratri Aarti Begins',hi:'चैत्र नवरात्रि आरती'}],
 };
-function loadLocalEvents(){
-  const stored=localStorage.getItem('calendarEvents');
-  if(stored){try{Object.assign(specialEvents,JSON.parse(stored));}catch(e){}}
-}
-loadLocalEvents();
 
-// Listen for cross-tab updates (when admin adds an event)
-window.addEventListener('storage',e=>{
-  if(e.key==='calendarEvents'){loadLocalEvents();renderCalendar();}
-});
-
-// ── Firestore sync — admin se add kiye events calendar pe dikhao ──────────
-(function initCalendarFirestore(){
-  function tryInit(retries){
-    if(typeof firebase==='undefined'||!firebase.apps){
-      if(retries>0){setTimeout(()=>tryInit(retries-1),150);}
-      return;
+// ✅ Ab API se events load hote hain — Firebase browser mein nahi
+async function loadEventsFromAPI() {
+  try {
+    const res  = await fetch('/api/events');
+    const data = await res.json();
+    if (data.success && data.events) {
+      Object.assign(specialEvents, data.events);
+      localStorage.setItem('calendarEvents', JSON.stringify(data.events));
+      renderCalendar();
     }
-    try{
-      const cfg=window.FIREBASE_CONFIG||window.firebaseConfig;
-      if(!cfg){return;}
-      if(!firebase.apps.length){firebase.initializeApp(cfg);}
-      const fsDb=firebase.firestore();
-
-      // Real-time listener — admin event add/delete kare to calendar turant update ho
-      fsDb.collection('events').onSnapshot((snapshot)=>{
-        const fetched={};
-        snapshot.forEach((doc)=>{
-          const ev=doc.data();
-          const date=ev.date;
-          if(!date)return;
-          if(!fetched[date])fetched[date]=[];
-          fetched[date].push({title:ev.title,en:ev.en,hi:ev.hi});
-        });
-        // Hard-coded events + Firebase events dono merge karo
-        Object.assign(specialEvents,fetched);
-        // localStorage mein save karo taaki next visit fast ho
-        localStorage.setItem('calendarEvents',JSON.stringify(fetched));
-        renderCalendar();
-      },(err)=>{
-        console.warn('Firestore calendar listener error:',err.message);
-        // Fallback: localStorage se load karo
-        loadLocalEvents();
-        renderCalendar();
-      });
-    }catch(e){
-      console.warn('Calendar Firestore init skipped:',e.message);
-    }
+  } catch (err) {
+    console.warn('Events API error — using localStorage fallback:', err.message);
+    const stored = localStorage.getItem('calendarEvents');
+    if (stored) { try { Object.assign(specialEvents, JSON.parse(stored)); } catch(e){} }
+    renderCalendar();
   }
-  tryInit(30);
-})();
+}
+loadEventsFromAPI();
 
-let calDate=new Date();
+let calDate = new Date();
 const hiMonths=['जनवरी','फरवरी','मार्च','अप्रैल','मई','जून','जुलाई','अगस्त','सितंबर','अक्टूबर','नवंबर','दिसंबर'];
 const enMonths=['January','February','March','April','May','June','July','August','September','October','November','December'];
 function isLangHi(){return document.body.classList.contains('lang-hi');}
+
 function renderCalendar(){
   const titleEl=document.getElementById('calTitle');if(!titleEl)return;
   const y=calDate.getFullYear(),m=calDate.getMonth();
@@ -195,6 +159,7 @@ function renderCalendar(){
   const todayStr=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
   showDateEvents(todayStr,today.getDay()===0);
 }
+
 function showDateEvents(dateStr,isSunday){
   document.querySelectorAll('.cal-day').forEach(d=>d.classList.remove('selected'));
   const lang=isLangHi();
@@ -206,6 +171,7 @@ function showDateEvents(dateStr,isSunday){
   document.getElementById('eventsList').innerHTML=html;
   document.getElementById('eventsPanelTitle').innerHTML='<span>Events on '+dateStr+'</span>';
 }
+
 function calPrev(){calDate.setMonth(calDate.getMonth()-1);renderCalendar();}
 function calNext(){calDate.setMonth(calDate.getMonth()+1);renderCalendar();}
 renderCalendar();
