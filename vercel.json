@@ -3,13 +3,13 @@
   "outputDirectory": ".",
   "functions": {
     "api/donate.js": {
-      "runtime": "nodejs20.x"
+      "runtime": "@vercel/node"
     },
     "api/events.js": {
-      "runtime": "nodejs20.x"
+      "runtime": "@vercel/node"
     },
     "api/admin.js": {
-      "runtime": "nodejs20.x"
+      "runtime": "@vercel/node"
     }
   }
 }
