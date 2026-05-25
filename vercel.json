@@ -2,13 +2,7 @@
   "buildCommand": "node build.js",
   "outputDirectory": ".",
   "functions": {
-    "api/donate.js": {
-      "runtime": "@vercel/node"
-    },
-    "api/events.js": {
-      "runtime": "@vercel/node"
-    },
-    "api/admin.js": {
+    "api/**/*.js": {
       "runtime": "@vercel/node"
     }
   }
