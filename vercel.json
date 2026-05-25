@@ -2,8 +2,14 @@
   "buildCommand": "node build.js",
   "outputDirectory": ".",
   "functions": {
-    "api/donate.js": { "runtime": "nodejs20.x" },
-    "api/events.js": { "runtime": "nodejs20.x" },
-    "api/admin.js":  { "runtime": "nodejs20.x" }
+    "api/donate.js": {
+      "runtime": "nodejs20.x"
+    },
+    "api/events.js": {
+      "runtime": "nodejs20.x"
+    },
+    "api/admin.js": {
+      "runtime": "nodejs20.x"
+    }
   }
 }
