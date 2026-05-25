@@ -8,7 +8,7 @@
       "use": "@vercel/node"
     },
     {
-      "src": "**/*.{html,css,js,png,jpg,svg,ico}",
+      "src": "**/*.{html,css,js,png,jpg,jpeg,gif,svg,ico}",
       "use": "@vercel/static"
     }
   ],
@@ -16,6 +16,13 @@
     {
       "src": "/api/(.*)",
       "dest": "api/$1.js"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ]
 }
