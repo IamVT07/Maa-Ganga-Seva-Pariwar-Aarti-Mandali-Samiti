@@ -255,8 +255,14 @@ async function loadPendingDonations() {
       list.innerHTML = '<div style="text-align:center;color:rgba(253,245,230,0.5);padding:2rem;">✅ Koi pending donation nahi hai.</div>';
       return;
     }
-    list.innerHTML = data.donations.map(d => `
-      <div style="background:rgba(255,107,0,0.08);border:1px solid rgba(255,107,0,0.3);border-radius:6px;padding:1.5rem;">
+    
+    list.innerHTML = ''; // List ko clear karo
+    
+    data.donations.forEach(d => {
+      const card = document.createElement('div');
+      card.style.cssText = "background:rgba(255,107,0,0.08);border:1px solid rgba(255,107,0,0.3);border-radius:6px;padding:1.5rem;";
+      
+      card.innerHTML = `
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
           <div><p style="color:rgba(242,201,76,0.8);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;margin:0 0 0.5rem;"><strong>Donor Name</strong></p><p style="color:var(--cream);margin:0;">${d.donorName||'N/A'}</p></div>
           <div><p style="color:rgba(242,201,76,0.8);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;margin:0 0 0.5rem;"><strong>Receipt No.</strong></p><p style="color:var(--cream);margin:0;">${d.receiptNo||'N/A'}</p></div>
@@ -265,22 +271,32 @@ async function loadPendingDonations() {
           <div><p style="color:rgba(242,201,76,0.8);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;margin:0 0 0.5rem;"><strong>Email</strong></p><p style="color:var(--cream);font-size:0.9rem;margin:0;word-break:break-all;">${d.donorEmail||'N/A'}</p></div>
           <div><p style="color:rgba(242,201,76,0.8);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;margin:0 0 0.5rem;"><strong>Method</strong></p><p style="color:var(--cream);margin:0;">${d.method||'N/A'}</p></div>
         </div>
-        \${d.transactionId?`<p style="color:rgba(253,245,230,0.7);margin:0.5rem 0;"><strong>Txn ID:</strong> \${d.transactionId}</p>`:''}
-        \${d.message?`<p style="color:rgba(253,245,230,0.7);margin:0.5rem 0;"><strong>Message:</strong> \${d.message}</p>`:''}
+        ${d.transactionId ? `<p style="color:rgba(253,245,230,0.7);margin:0.5rem 0;"><strong>Txn ID:</strong> ${d.transactionId}</p>` : ''}
+        ${d.message ? `<p style="color:rgba(253,245,230,0.7);margin:0.5rem 0;"><strong>Message:</strong> ${d.message}</p>` : ''}
         <div style="display:flex;gap:0.8rem;margin-top:1rem;">
-          <button onclick="approveDonation('\${d.id}',\${JSON.stringify(d).replace(/"/g,'&quot;')},this)"
-                  style="flex:1;padding:0.8rem;background:#FF6B00;color:white;border:none;border-radius:4px;cursor:pointer;font-weight:bold;font-size:0.9rem;">
+          <button class="approve-btn" style="flex:1;padding:0.8rem;background:#FF6B00;color:white;border:none;border-radius:4px;cursor:pointer;font-weight:bold;font-size:0.9rem;">
             ✅ Approve &amp; Send Thank You Email
           </button>
-          <button onclick="rejectDonation('\${d.id}')"
-                  style="flex:1;padding:0.8rem;background:#555;color:white;border:none;border-radius:4px;cursor:pointer;font-size:0.9rem;">
+          <button class="reject-btn" style="flex:1;padding:0.8rem;background:#555;color:white;border:none;border-radius:4px;cursor:pointer;font-size:0.9rem;">
             🗑️ Reject
           </button>
         </div>
-      </div>
-    `).join('');
+      `;
+      
+      // Elements par event listeners securely attach karo bina data replace kiye
+      card.querySelector('.approve-btn').onclick = function(e) {
+        approveDonation(d.id, d, e.target);
+      };
+      
+      card.querySelector('.reject-btn').onclick = function() {
+        rejectDonation(d.id);
+      };
+      
+      list.appendChild(card);
+    });
+    
   } catch (err) {
-    list.innerHTML = `<div style="color:#FF6B6B;padding:1rem;">❌ Error: \${err.message}</div>`;
+    list.innerHTML = `<div style="color:#FF6B6B;padding:1rem;">❌ Error: ${err.message}</div>`;
   }
 }
 
