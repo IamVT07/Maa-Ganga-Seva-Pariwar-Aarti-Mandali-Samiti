@@ -5,67 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>दान — माँ गंगा सेवा परिवार आरती मंडली</title>
 <link rel="stylesheet" href="style.css">
-
-<script src="config.js"></script>
-
-<script type="module">
-  /*
-   * FIX: Firebase config ko config.js se load karna reliably kaam nahi karta
-   * jab Firebase modules ES module context mein hote hain.
-   * Solution: config.js ek global window.firebaseConfig object expose karta hai,
-   * aur hum usse module mein window ke through access karte hain.
-   */
-
-  import { initializeApp }       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp }
-                                from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-  function waitForConfig(retries = 20) {
-    return new Promise((resolve, reject) => {
-      const check = (n) => {
-        if (window.firebaseConfig) return resolve(window.firebaseConfig);
-        if (n <= 0) return reject(new Error("firebaseConfig not found in window"));
-        setTimeout(() => check(n - 1), 100);
-      };
-      check(retries);
-    });
-  }
-
-  try {
-    const cfg = await waitForConfig();
-    const app = initializeApp(cfg);
-    const db  = getFirestore(app);
-    window._db         = db;
-    window._addDoc      = addDoc;
-    window._collection = collection;
-    window._serverTs   = serverTimestamp;
-    window._fbReady    = true;
-    console.log("✅ Firebase ready");
-  } catch (e) {
-    console.warn("⚠️ Firebase init failed:", e.message);
-    window._fbReady = false;
-  }
-</script>
-
+<!-- config.js sirf EmailJS ke liye — Firebase ab API se handle hota hai -->
+<script src="config.js" onerror="console.warn('config.js nahi mila')"></script>
 <style>
 #donate {
   background: linear-gradient(135deg, #1A0500, #3D1500);
   padding: 80px 2rem 60px;
-  position: relative;
-  overflow: hidden;
-  min-height: 100vh;
+  position: relative; overflow: hidden; min-height: 100vh;
 }
 #donate::before {
-  content: 'ॐ';
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 28rem;
-  color: rgba(212, 160, 23, 0.03);
-  line-height: 1; pointer-events: none;
+  content: 'ॐ'; position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%); font-size: 28rem;
+  color: rgba(212, 160, 23, 0.03); line-height: 1; pointer-events: none;
 }
 .donate-section-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
-
-/* ── Spinner Overlay ── */
 .spinner-overlay {
   display: none; position: fixed; inset: 0;
   background: rgba(10, 3, 0, 0.85); z-index: 9999;
@@ -74,60 +27,23 @@
 .spinner-overlay.show { display: flex; }
 .spinner {
   width: 56px; height: 56px; border-radius: 50%;
-  border: 5px solid rgba(212, 160, 23, 0.2);
-  border-top-color: #FF6B00;
+  border: 5px solid rgba(212, 160, 23, 0.2); border-top-color: #FF6B00;
   animation: spin 0.85s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-.spin-msg {
-  font-family: 'Cinzel', serif; font-size: 0.88rem;
-  letter-spacing: 2px; color: #F2C94C; text-align: center;
-}
-
-/* ── Pending Notice Box ── */
+.spin-msg { font-family: 'Cinzel', serif; font-size: 0.88rem; letter-spacing: 2px; color: #F2C94C; text-align: center; }
 .pending-notice {
-  display: none;
-  margin: 20px 0 0;
-  background: rgba(255, 107, 0, 0.1);
-  border: 1px solid rgba(255, 107, 0, 0.4);
-  border-radius: 10px;
-  padding: 18px 22px;
-  color: #F2C94C;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  text-align: center;
+  display: none; margin: 20px 0 0;
+  background: rgba(255, 107, 0, 0.1); border: 1px solid rgba(255, 107, 0, 0.4);
+  border-radius: 10px; padding: 18px 22px; color: #F2C94C; font-size: 0.9rem; line-height: 1.6; text-align: center;
 }
 .pending-notice.show { display: block; }
-.pending-notice strong { color: #FF6B00; font-size: 1rem; }
-
-/* ── Copy Button UI Styling ── */
 .copy-btn {
-  background: rgba(212, 160, 23, 0.15);
-  border: 1px dashed var(--gold);
-  color: var(--pale-gold);
-  padding: 4px 10px;
-  font-size: 0.75rem;
-  cursor: pointer;
-  margin-left: 8px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  font-family: sans-serif;
+  background: rgba(212, 160, 23, 0.15); border: 1px dashed var(--gold);
+  color: var(--pale-gold); padding: 4px 10px; font-size: 0.75rem; cursor: pointer;
+  margin-left: 8px; border-radius: 4px; transition: all 0.2s ease; font-family: sans-serif;
 }
-.copy-btn:hover {
-  background: var(--saffron);
-  color: #fff;
-  border-color: var(--saffron);
-}
-
-/* ── FIXED HAMBURGER MENU CSS LOGIC ── */
-.mobile-nav {
-  display: none;
-  flex-direction: column;
-}
-.hamburger-checkbox { display: none; }
-.hamburger-checkbox:checked ~ .mobile-nav {
-  display: flex !important;
-}
+.copy-btn:hover { background: var(--saffron); color: #fff; border-color: var(--saffron); }
 </style>
 </head>
 <body class="lang-hi">
@@ -165,21 +81,21 @@
       <button class="lang-btn active" onclick="setLang('hi')">हिंदी</button>
       <button class="lang-btn" onclick="setLang('en')">ENG</button>
     </div>
-    <input type="checkbox" id="hamburger" class="hamburger-checkbox" onchange="toggleMobileMenu(this)">
+    <input type="checkbox" id="hamburger" class="hamburger-checkbox">
     <label for="hamburger" class="hamburger-btn" aria-label="Menu" id="hamburgerLabel">
       <span></span><span></span><span></span>
     </label>
+    <ul class="mobile-nav" id="mobileNavMenu" style="display:none;">
+      <li><a href="index.html#history" onclick="closeMenu()"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
+      <li><a href="timings.html"       onclick="closeMenu()"><span class="hi">समय</span><span class="en">Timings</span></a></li>
+      <li><a href="calendar.html"      onclick="closeMenu()"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
+      <li><a href="booking.html"       onclick="closeMenu()"><span class="hi">आरती बुक करें</span><span class="en">Book Aarti</span></a></li>
+      <li><a href="gallery.html"       onclick="closeMenu()"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
+      <li><a href="visit.html"         onclick="closeMenu()"><span class="hi">मार्गदर्शिका</span><span class="en">Guide</span></a></li>
+      <li><a href="donate.html"        onclick="closeMenu()"><span class="hi">दान</span><span class="en">Donate</span></a></li>
+      <li><a href="contact.html"       onclick="closeMenu()"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
+    </ul>
   </div>
-  <ul class="mobile-nav" id="mobileNavMenu">
-    <li><a href="index.html#history" onclick="closeMenu()"><span class="hi">इतिहास</span><span class="en">History</span></a></li>
-    <li><a href="timings.html"       onclick="closeMenu()"><span class="hi">समय</span><span class="en">Timings</span></a></li>
-    <li><a href="calendar.html"      onclick="closeMenu()"><span class="hi">कैलेंडर</span><span class="en">Calendar</span></a></li>
-    <li><a href="booking.html"       onclick="closeMenu()"><span class="hi">आरती बुक करें</span><span class="en">Book Aarti</span></a></li>
-    <li><a href="gallery.html"       onclick="closeMenu()"><span class="hi">गैलरी</span><span class="en">Gallery</span></a></li>
-    <li><a href="visit.html"         onclick="closeMenu()"><span class="hi">मार्गदर्शिका</span><span class="en">Guide</span></a></li>
-    <li><a href="donate.html"        onclick="closeMenu()"><span class="hi">दान</span><span class="en">Donate</span></a></li>
-    <li><a href="contact.html"       onclick="closeMenu()"><span class="hi">संपर्क</span><span class="en">Contact</span></a></li>
-  </ul>
 </nav>
 
 <div id="donate" style="padding-top:90px;">
@@ -195,27 +111,24 @@
     </div>
 
     <div class="donate-layout">
-
-      <div class="qr-block" style="text-align: center;">
-        <div class="qr-frame" style="display: inline-block;">
-          <img src="Payment QR.jpeg" alt="Donation QR Code"
+      <div class="qr-block" style="text-align:center;">
+        <div class="qr-frame" style="display:inline-block;">
+          <img src="Payment%20QR.jpeg" alt="Donation QR Code"
                style="width:180px;height:180px;display:block;"
-               onerror="this.outerHTML='<div class=\'qr-fallback\'><div style=\'font-size:3rem;\'>📱</div><div style=\'font-size:0.7rem;color:#888;margin-top:6px;\'>Scan to Pay<br>UPI QR Code</div></div>'">
+               onerror="this.outerHTML='<div style=\'font-size:3rem;text-align:center;\'>📱<br><small style=\'font-size:0.7rem;color:#888;\'>Scan to Pay</small></div>'">
         </div>
-        <p class="qr-caption" style="margin-top: 8px; margin-bottom: 12px;">
+        <p class="qr-caption" style="margin-top:8px;margin-bottom:12px;">
           <span class="hi">UPI / स्कैन करके दान करें</span>
           <span class="en">Scan &amp; Donate via UPI</span>
         </p>
-        
-        <p class="upi-link-text" style="font-size: 1.05rem; letter-spacing: 0.5px;">
-          <span style="color: var(--cream);">upi: <b id="targetUpiId" style="color: var(--pale-gold); font-weight: normal;">vt665962@okaxis</b></span>
+        <p class="upi-link-text" style="font-size:1.05rem;letter-spacing:0.5px;">
+          <span style="color:var(--cream);">upi: <b id="targetUpiId" style="color:var(--pale-gold);font-weight:normal;">vt665962@okaxis</b></span>
           <button type="button" class="copy-btn" onclick="copyUpiText()">Copy ID</button>
         </p>
       </div>
 
       <div class="donate-form-box">
         <h3>🌸 <span class="hi">दान फॉर्म</span><span class="en">Donation Form</span></h3>
-
         <div class="form-group">
           <label class="hi">पूरा नाम *</label><label class="en">Full Name *</label>
           <input type="text" id="dName" placeholder="Your full name" required>
@@ -240,8 +153,7 @@
           </select>
         </div>
         <div class="form-group" id="transactionGroup">
-          <label>
-            Transaction ID / UTR No.
+          <label>Transaction ID / UTR No.
             <span class="hi">(ऑनलाइन भुगतान के लिए)</span>
             <span class="en">(For Online Payment)</span>
           </label>
@@ -257,44 +169,20 @@
           <span class="en">Submit Donation 🙏</span>
         </button>
 
-        <div class="pending-notice" id="pendingNotice" style="
-            text-align: center;
-            border: 1px dashed var(--gold);
-            padding: 28px 22px;
-            background: rgba(255,107,0,0.04);
-            border-radius: 10px;
-            margin-top: 20px;">
-
-          <div style="font-size: 2rem; margin-bottom: 10px;">🙏</div>
-          <strong style="color: #25D366; font-size: 1.25rem; font-family: 'Cinzel', serif; letter-spacing: 1px; display: block; margin-bottom: 14px;">
-            धन्यवाद / Thank You!
-          </strong>
-
-          <p class="hi" style="font-size: 1rem; line-height: 1.8; color: rgba(253,245,230,0.85); margin: 0 0 10px;">
-            माँ गंगा सेवा परिवार आरती मंडली में आपके सहयोग के लिए हृदय से धन्यवाद।<br>
-          </p>
-
-          <p class="en" style="display:none; font-size: 1rem; line-height: 1.8; color: rgba(253,245,230,0.85); margin: 0 0 10px;">
-            Thank you from the heart for your sacred contribution.<br>
-          </p>
-
-          <div style="
-              margin: 18px auto 0;
-              display: inline-block;
-              background: rgba(212,160,23,0.1);
-              border: 1px solid rgba(212,160,23,0.35);
-              border-radius: 6px;
-              padding: 10px 20px;">
-            <small style="color: rgba(253,245,230,0.5); font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 4px;">Reference Number</small>
-            <span style="color:#F2C94C; font-family:'Cinzel',serif; letter-spacing:1px; font-size: 0.95rem;" id="receiptRefDisplay"></span>
+        <div class="pending-notice" id="pendingNotice" style="text-align:center;border:1px dashed var(--gold);padding:28px 22px;background:rgba(255,107,0,0.04);border-radius:10px;margin-top:20px;">
+          <div style="font-size:2rem;margin-bottom:10px;">🙏</div>
+          <strong style="color:#25D366;font-size:1.25rem;font-family:'Cinzel',serif;letter-spacing:1px;display:block;margin-bottom:14px;">धन्यवाद / Thank You!</strong>
+          <p class="hi" style="font-size:1rem;line-height:1.8;color:rgba(253,245,230,0.85);margin:0 0 10px;">माँ गंगा सेवा परिवार आरती मंडली में आपके सहयोग के लिए हृदय से धन्यवाद।</p>
+          <p class="en" style="display:none;font-size:1rem;line-height:1.8;color:rgba(253,245,230,0.85);margin:0 0 10px;">Thank you from the heart for your sacred contribution.</p>
+          <div style="margin:18px auto 0;display:inline-block;background:rgba(212,160,23,0.1);border:1px solid rgba(212,160,23,0.35);border-radius:6px;padding:10px 20px;">
+            <small style="color:rgba(253,245,230,0.5);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;">Reference Number</small>
+            <span style="color:#F2C94C;font-family:'Cinzel',serif;letter-spacing:1px;font-size:0.95rem;" id="receiptRefDisplay"></span>
           </div>
-
-          <p style="margin: 20px 0 0; color: var(--pale-gold); font-size: 1.2rem; font-weight: bold;">
-            हर हर गंगे 🌊
-          </p>
+          <p style="margin:20px 0 0;color:var(--pale-gold);font-size:1.2rem;font-weight:bold;">हर हर गंगे 🌊</p>
         </div>
-
-      </div></div></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <footer>
@@ -311,66 +199,49 @@
   <p>© 2025 माँ गंगा सेवा परिवार आरती मंडली समिति · Sarsaiya Ghat, Kanpur, UP</p>
   <p class="footer-note">हर हर गंगे &nbsp;·&nbsp; Har Har Gange &nbsp;·&nbsp; जय माँ गंगा</p>
   <a href="admin.html" class="admin-footer-btn" title="Admin Panel">ॐ</a>
-</div>
+</footer>
 
 <script>
 /* ── Language ── */
 function setLang(lang) {
   document.body.className = 'lang-' + lang;
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-  const targetBtn = document.querySelector('.lang-btn[onclick="setLang(\'' + lang + '\')"]');
-  if (targetBtn) targetBtn.classList.add('active');
+  const btn = document.querySelector('.lang-btn[onclick="setLang(\'' + lang + '\')"]');
+  if (btn) btn.classList.add('active');
   localStorage.setItem('siteLang', lang);
 }
 (function () {
   const saved = localStorage.getItem('siteLang') || 'hi';
   document.body.className = 'lang-' + saved;
   const btn = document.querySelector('.lang-btn[onclick="setLang(\'' + saved + '\')"]');
-  if (btn) {
-    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  }
+  if (btn) { document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
 })();
 
-/* ── Fixed Mobile Menu Engine ── */
-function toggleMobileMenu(checkbox) {
-  const mobileMenu = document.getElementById('mobileNavMenu');
-  if (mobileMenu) {
-    mobileMenu.style.display = checkbox.checked ? 'flex' : 'none';
-  }
-}
-
+/* ── Hamburger Menu ── */
+document.getElementById('hamburger').addEventListener('change', function() {
+  document.getElementById('mobileNavMenu').style.display = this.checked ? 'flex' : 'none';
+});
 function closeMenu() {
   const cb = document.getElementById('hamburger');
-  if (cb) {
-    cb.checked = false;
-    toggleMobileMenu(cb);
-  }
+  cb.checked = false;
+  document.getElementById('mobileNavMenu').style.display = 'none';
 }
-
-document.addEventListener('click', function (e) {
+document.addEventListener('click', function(e) {
   const nav = document.querySelector('nav');
   const hb  = document.getElementById('hamburger');
-  if (hb && hb.checked && !nav.contains(e.target)) {
-    hb.checked = false;
-    toggleMobileMenu(hb);
-  }
+  if (hb && hb.checked && !nav.contains(e.target)) closeMenu();
 });
 
-/* ── UPI Copy Logic ── */
+/* ── UPI Copy ── */
 function copyUpiText() {
   const upiId = document.getElementById('targetUpiId').textContent;
   navigator.clipboard.writeText(upiId).then(() => {
-    showToast('📋 UPI ID कॉपी हो गई है! / UPI ID Copied successfully!');
+    showToast('📋 UPI ID कॉपी हो गई! / Copied!');
   }).catch(() => {
-    // Fallback logic for older web interfaces
     const el = document.createElement('textarea');
-    el.value = upiId;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
-    showToast('📋 UPI ID कॉपी हो गई है! / UPI ID Copied successfully!');
+    el.value = upiId; document.body.appendChild(el); el.select();
+    document.execCommand('copy'); document.body.removeChild(el);
+    showToast('📋 UPI ID कॉपी हो गई! / Copied!');
   });
 }
 
@@ -378,8 +249,7 @@ function copyUpiText() {
 function showToast(msg) {
   document.querySelectorAll('.toast').forEach(t => t.remove());
   const t = document.createElement('div');
-  t.className  = 'toast';
-  t.textContent = msg;
+  t.className = 'toast'; t.textContent = msg;
   document.body.appendChild(t);
   setTimeout(() => { if (t.parentNode) t.remove(); }, 4500);
 }
@@ -389,16 +259,10 @@ function updateTransactionField() {
   const method = document.getElementById('dMethod').value;
   const group  = document.getElementById('transactionGroup');
   const input  = document.getElementById('dTransactionId');
-
   if (method === 'Online Payment') {
-    group.style.display = 'block';
-    input.disabled      = false;
-    input.required      = true;
+    group.style.display = 'block'; input.disabled = false; input.required = true;
   } else {
-    group.style.display = 'none';
-    input.disabled      = true;
-    input.required      = false;
-    input.value         = '';
+    group.style.display = 'none'; input.disabled = true; input.required = false; input.value = '';
   }
 }
 updateTransactionField();
@@ -407,7 +271,7 @@ updateTransactionField();
 function showSpinner() { document.getElementById('spinnerOverlay').classList.add('show'); }
 function hideSpinner() { document.getElementById('spinnerOverlay').classList.remove('show'); }
 
-
+/* ── Process Donation — AB API SE, FIREBASE NAHI ── */
 async function processDonation() {
   const name   = document.getElementById('dName').value.trim();
   const phone  = document.getElementById('dPhone').value.trim();
@@ -417,92 +281,53 @@ async function processDonation() {
   let   txn    = document.getElementById('dTransactionId').value.trim();
   const msg    = document.getElementById('dMsg').value.trim();
 
-  /* ── Validation ── */
   if (!name || !phone || !email || !amount) {
-    showToast('⚠️ कृपया सभी आवश्यक फील्ड भरें / Please fill all required fields');
-    return;
+    showToast('⚠️ कृपया सभी आवश्यक फील्ड भरें / Please fill all required fields'); return;
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    showToast('⚠️ कृपया सही ईमेल दर्ज करें / Please enter a valid email');
-    return;
+    showToast('⚠️ कृपया सही ईमेल दर्ज करें / Please enter a valid email'); return;
   }
   if (method === 'Online Payment' && !txn) {
-    showToast('⚠️ कृपया Transaction ID दर्ज करें / Please enter Transaction ID for online payment');
-    return;
+    showToast('⚠️ कृपया Transaction ID दर्ज करें / Please enter Transaction ID'); return;
   }
   if (method === 'Cash at Ghat') txn = '';
 
   const now       = new Date();
-  const receiptNo = 'MGSP-'
-    + now.getFullYear()
-    + String(now.getMonth() + 1).padStart(2, '0')
-    + String(now.getDate()).padStart(2, '0')
-    + '-' + Math.floor(Math.random() * 9000 + 1000);
-  const dateStr = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
-  const timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+  const receiptNo = 'MGSP-' + now.getFullYear()
+    + String(now.getMonth()+1).padStart(2,'0')
+    + String(now.getDate()).padStart(2,'0')
+    + '-' + Math.floor(Math.random()*9000+1000);
+  const dateStr = now.toLocaleDateString('en-IN', { day:'2-digit', month:'long', year:'numeric' });
+  const timeStr = now.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
 
   showSpinner();
 
-  const saved = await saveToFirestore({ name, phone, email, amount, method, txn, msg, receiptNo, dateStr, timeStr });
-
-  hideSpinner();
-
-  if (saved) {
-    /* Show pending notice — NO PDF, NO immediate receipt */
-    const notice = document.getElementById('pendingNotice');
-    notice.classList.add('show');
-    document.getElementById('receiptRefDisplay').textContent = receiptNo;
-
-    ['dName', 'dPhone', 'dEmail', 'dAmount', 'dMsg', 'dTransactionId'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.value = '';
-    });
-    notice.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  } else {
-    showToast('⚠️ कुछ गड़बड़ हुई, कृपया दोबारा कोशिश करें / Something went wrong, please try again.');
-  }
-}
-
-
-async function saveToFirestore(data) {
   try {
-    if (!window._fbReady) {
-      console.warn('Firebase not ready. Donation NOT saved.');
-      console.warn('_db:', window._db);
-      console.warn('_addDoc:', window._addDoc);
-      console.warn('_collection:', window._collection);
-      showToast('⚠️ Firebase not connected. Refreshing page...');
-      setTimeout(() => location.reload(), 2000);
-      return false;
+    // ✅ API call — Firebase browser mein bilkul nahi
+    const res = await fetch('/api/donate', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ name, phone, email, amount, method, txn, msg, receiptNo, dateStr, timeStr })
+    });
+
+    const data = await res.json();
+    hideSpinner();
+
+    if (data.success) {
+      const notice = document.getElementById('pendingNotice');
+      notice.classList.add('show');
+      document.getElementById('receiptRefDisplay').textContent = receiptNo;
+      ['dName','dPhone','dEmail','dAmount','dMsg','dTransactionId'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.value = '';
+      });
+      notice.scrollIntoView({ behavior:'smooth', block:'center' });
+    } else {
+      showToast('⚠️ Error: ' + (data.error || 'Something went wrong'));
     }
-
-    console.log('Saving donation to Firestore...');
-    
-    await window._addDoc(
-      window._collection(window._db, 'donations'),
-      {
-        /* ── Donor Information ── */
-        receiptNo:     data.receiptNo,
-        donorName:     data.name,
-        donorEmail:    data.email,
-        phone:         data.phone,
-        amount:        Number(data.amount),
-        method:        data.method,
-        transactionId: data.txn   || '',
-        message:       data.msg   || '',
-        dateStr:       data.dateStr,
-        timeStr:       data.timeStr,
-        createdAt:     window._serverTs(),
-        status: 'Pending',
-      }
-    );
-
-    console.log('✅ Donation saved with status: Pending');
-    return true;
-
   } catch (err) {
-    console.error('❌ Firestore error:', err);
-    return false;
+    hideSpinner();
+    showToast('⚠️ Network error — please try again');
+    console.error('Donate API error:', err);
   }
 }
 </script>
