@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - माँ गंगा सेवा परिवार</title>
+  <title>Admin Panel - माँ गंगा सेवा परिवार आरती मंडली समिति</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
     :root { --saffron:#FF6B00; --deep-saffron:#E55A00; --gold:#D4A017; --pale-gold:#F2C94C; --cream:#FDF5E6; --dark:#1A0A00; --mid:#3D1C00; }
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -116,7 +115,7 @@
 //  STATE
 // ════════════════════════════════════════════
 let isLoggedIn   = false;
-let adminToken   = '';   // password hi token hai — server verify karta hai
+let adminToken   = '';   
 
 // ════════════════════════════════════════════
 //  LOGIN / LOGOUT
@@ -125,7 +124,6 @@ async function loginAdmin() {
   const entered = document.getElementById('adminPassword').value;
   if (!entered) return showLoginMsg('⚠️ Password daalen', '#F2C94C');
 
-  // Server se verify karo — ek dummy request
   try {
     const res = await fetch('/api/admin?action=donations', {
       headers: { 'x-admin-token': entered }
@@ -135,7 +133,6 @@ async function loginAdmin() {
       document.getElementById('adminPassword').value = '';
       return;
     }
-    // Login successful
     adminToken = entered;
     isLoggedIn = true;
     localStorage.setItem('adminLogin', 'true');
@@ -143,8 +140,7 @@ async function loginAdmin() {
     document.getElementById('authSection').style.display  = 'none';
     document.getElementById('adminContent').style.display = 'block';
     document.getElementById('logoutBtn').style.display    = 'block';
-    updateStatus('✅ API se connected — keys browser mein nahi hain 🔒');
-    initEmailJS();
+    updateStatus('✅ API se connected — Keys backend me safe hain 🔒');
     loadEvents();
     loadPendingDonations();
   } catch (err) {
@@ -169,25 +165,7 @@ function showLoginMsg(msg, color) {
 }
 
 // ════════════════════════════════════════════
-//  EMAILJS — config.js hatao, ab hardcode karo sirf EmailJS
-//  (EmailJS keys browser mein dikhna safe hai — sirf email bhejta hai)
-// ════════════════════════════════════════════
-function initEmailJS() {
-  try {
-    // EmailJS ke liye Vercel env variable — build.js se inject hoga
-    // Ya seedha yahan daalo — EmailJS key sirf email bhejti hai, koi risk nahi
-    const pubKey = window.EMAILJS_PUBLIC_KEY;
-    if (!pubKey || pubKey === 'YOUR_PUBLIC_KEY') {
-      console.warn('⚠️ EmailJS key nahi mili');
-      return;
-    }
-    emailjs.init({ publicKey: pubKey });
-    console.log('✅ EmailJS initialized');
-  } catch (err) { console.error('EmailJS init error:', err); }
-}
-
-// ════════════════════════════════════════════
-//  EVENTS — API se
+//  EVENTS — API se (With x-admin-token FIX)
 // ════════════════════════════════════════════
 async function addEvent() {
   if (!isLoggedIn) return showMessage('❌ Pehle login karein', 'error');
@@ -218,7 +196,10 @@ async function loadEvents() {
   const list = document.getElementById('eventsList');
   list.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;"><span class="loading"></span></div>';
   try {
-    const res  = await fetch('/api/events');
+    // FIX: Events load karte waqt bhi token verification pass karna zaroori hai
+    const res  = await fetch('/api/events', {
+      headers: { 'x-admin-token': adminToken }
+    });
     const data = await res.json();
     if (!data.success || !data.events || Object.keys(data.events).length === 0) {
       list.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:rgba(253,245,230,0.5);padding:2rem;">Abhi koi event nahi hai</div>';
@@ -284,14 +265,14 @@ async function loadPendingDonations() {
           <div><p style="color:rgba(242,201,76,0.8);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;margin:0 0 0.5rem;"><strong>Email</strong></p><p style="color:var(--cream);font-size:0.9rem;margin:0;word-break:break-all;">${d.donorEmail||'N/A'}</p></div>
           <div><p style="color:rgba(242,201,76,0.8);font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;margin:0 0 0.5rem;"><strong>Method</strong></p><p style="color:var(--cream);margin:0;">${d.method||'N/A'}</p></div>
         </div>
-        ${d.transactionId?`<p style="color:rgba(253,245,230,0.7);margin:0.5rem 0;"><strong>Txn ID:</strong> ${d.transactionId}</p>`:''}
-        ${d.message?`<p style="color:rgba(253,245,230,0.7);margin:0.5rem 0;"><strong>Message:</strong> ${d.message}</p>`:''}
+        \${d.transactionId?`<p style="color:rgba(253,245,230,0.7);margin:0.5rem 0;"><strong>Txn ID:</strong> \${d.transactionId}</p>`:''}
+        \${d.message?`<p style="color:rgba(253,245,230,0.7);margin:0.5rem 0;"><strong>Message:</strong> \${d.message}</p>`:''}
         <div style="display:flex;gap:0.8rem;margin-top:1rem;">
-          <button onclick="approveDonation('${d.id}',${JSON.stringify(d).replace(/"/g,'&quot;')},this)"
+          <button onclick="approveDonation('\${d.id}',\${JSON.stringify(d).replace(/"/g,'&quot;')},this)"
                   style="flex:1;padding:0.8rem;background:#FF6B00;color:white;border:none;border-radius:4px;cursor:pointer;font-weight:bold;font-size:0.9rem;">
             ✅ Approve &amp; Send Thank You Email
           </button>
-          <button onclick="rejectDonation('${d.id}')"
+          <button onclick="rejectDonation('\${d.id}')"
                   style="flex:1;padding:0.8rem;background:#555;color:white;border:none;border-radius:4px;cursor:pointer;font-size:0.9rem;">
             🗑️ Reject
           </button>
@@ -299,22 +280,22 @@ async function loadPendingDonations() {
       </div>
     `).join('');
   } catch (err) {
-    list.innerHTML = `<div style="color:#FF6B6B;padding:1rem;">❌ Error: ${err.message}</div>`;
+    list.innerHTML = `<div style="color:#FF6B6B;padding:1rem;">❌ Error: \${err.message}</div>`;
   }
 }
 
 async function approveDonation(donationId, donationData, btn) {
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Processing…'; }
   try {
+    // FIX: donationId aur donationData dono ko body mein backend API par bhejo
     const res  = await fetch('/api/admin?action=approve', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json', 'x-admin-token': adminToken },
-      body:    JSON.stringify({ donationId })
+      body:    JSON.stringify({ donationId, donationData })
     });
     const data = await res.json();
     if (data.success) {
-      const sent = await sendThankYouEmail(donationData);
-      showMessage(sent ? '✅ Approved! Email bhej diya: ' + donationData.donorEmail : '✅ Approved! (Email check karein)', sent ? 'success' : 'info');
+      showMessage('✅ Approved! Thank You email backend se bhej diya gaya.', 'success');
       loadPendingDonations();
     } else {
       showMessage('❌ Error: ' + data.error, 'error');
@@ -340,35 +321,16 @@ async function rejectDonation(donationId) {
   } catch (err) { showMessage('❌ Error: ' + err.message, 'error'); }
 }
 
-async function sendThankYouEmail(data) {
-  try {
-    if (typeof emailjs === 'undefined') return false;
-    const svcId  = window.EMAILJS_SERVICE_ID;
-    const tplId  = window.EMAILJS_TEMPLATE_ID;
-    const pubKey = window.EMAILJS_PUBLIC_KEY;
-    if (!pubKey || pubKey === 'YOUR_PUBLIC_KEY') return false;
-    const params = {
-      donor_name: data.donorName||'Donor', donor_email: data.donorEmail||'',
-      receipt_no: data.receiptNo||'N/A', amount: data.amount||'0',
-      method: data.method||'N/A', date: data.dateStr||new Date().toLocaleDateString('en-IN'),
-      txn_id: data.transactionId||'N/A', message: data.message||''
-    };
-    const res = await emailjs.send(svcId, tplId, params);
-    return res.status === 200;
-  } catch (err) { console.error('EmailJS error:', err); return false; }
-}
-
 function updateStatus(msg, isError = false) {
-  document.getElementById('systemStatus').innerHTML = `<p style="color:${isError?'#FF6B6B':'#25D366'};">${msg}</p>`;
+  document.getElementById('systemStatus').innerHTML = `<p style="color:\${isError?'#FF6B6B':'#25D366'};\劇">\${msg}</p>`;
 }
 
 function showMessage(msg, type = 'info') {
   const el = document.getElementById('statusMessage');
-  el.className = `alert alert-${type}`; el.textContent = msg;
+  el.className = `alert alert-\${type}`; el.textContent = msg;
   setTimeout(() => { el.textContent = ''; el.className = ''; }, 4000);
 }
 
-// Saved login check
 window.addEventListener('load', () => {
   if (localStorage.getItem('adminLogin') === 'true') {
     adminToken = localStorage.getItem('adminToken') || '';
@@ -377,17 +339,11 @@ window.addEventListener('load', () => {
     document.getElementById('authSection').style.display  = 'none';
     document.getElementById('adminContent').style.display = 'block';
     document.getElementById('logoutBtn').style.display    = 'block';
-    updateStatus('✅ API se connected — keys browser mein nahi hain 🔒');
-    initEmailJS();
+    updateStatus('✅ API se connected — Keys backend me safe hain 🔒');
     loadEvents();
     loadPendingDonations();
   }
 });
-
-// EmailJS build.js se inject hoga — Vercel env se
 </script>
-
-<!-- EmailJS keys inject — build.js Vercel pe yeh line generate karega -->
-<script src="config.js" onerror="console.warn('config.js nahi mila — Vercel env use ho raha hai')"></script>
 </body>
 </html>
