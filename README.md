@@ -1,5 +1,5 @@
 # 🌊 Maa Ganga Seva Pariwar Aarti Mandali Samiti
-**Har Har Gange! | Official Community & Service Portal**
+**Har Har Gange! | Official Community & Spiritual Service**
 
 <div align="center">
 
@@ -39,7 +39,6 @@ This digital portal was created as an offering (Seva) to bring our devotee commu
 ---
 
 ### 💻 Developer
-*Vaibhav Tiwari
 *Built with devotion to support local cultural heritage and digitalize community management.*
 
 * **Developer:** Vaibhav Tiwari
