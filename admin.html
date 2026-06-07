@@ -338,12 +338,13 @@ async function rejectDonation(donationId) {
 }
 
 function updateStatus(msg, isError = false) {
-  document.getElementById('systemStatus').innerHTML = `<p style="color:\${isError?'#FF6B6B':'#25D366'};\劇">\${msg}</p>`;
+  document.getElementById('systemStatus').innerHTML = `<p style="color:${isError ? '#FF6B6B' : '#25D366'};">${msg}</p>`;
 }
 
 function showMessage(msg, type = 'info') {
   const el = document.getElementById('statusMessage');
-  el.className = `alert alert-\${type}`; el.textContent = msg;
+  el.className = `alert alert-${type}`; 
+  el.textContent = msg;
   setTimeout(() => { el.textContent = ''; el.className = ''; }, 4000);
 }
 
